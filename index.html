@@ -8,6 +8,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- เพิ่มไลบรารีสำหรับการบันทึกภาพและ PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <style>
     :root {
         --primary: #e86614; 
@@ -36,7 +40,7 @@
     .header-title-box {
         background: linear-gradient(135deg, #1a1e29, #2c3245);
         padding: 30px 40px; border-radius: 16px; color: white; 
-        margin: 20px 0 0 0 !important; /* แก้ไขไม่ให้ทับกับรูปภาพปก */
+        margin: 20px 0 0 0 !important;
         position: relative; z-index: 2; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); text-align: center;
         border-bottom: 5px solid var(--primary);
     }
@@ -77,6 +81,14 @@
     .quick-sums button:hover { border-color: var(--primary); color: var(--primary); }
     
     .discount-alert { background: #dcfce7; color: #166534; padding: 10px; border-radius: 8px; font-size: 13px; margin-top: 15px; display: flex; align-items: center; gap: 8px; font-weight: 500; border: 1px solid #bbf7d0;}
+
+    /* Input text for sum insured */
+    .sum-input-box {
+        width: 120px; font-size: 18px; font-weight: 700; color: var(--primary); text-align: right; 
+        border: 1px solid var(--border-color); border-radius: 8px; padding: 5px 10px; outline: none; 
+        font-family: 'Prompt', sans-serif; transition: 0.3s; background: white;
+    }
+    .sum-input-box:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
 
     /* --- Right Panel (Presentation) --- */
     .right-panel { flex: 1; display: flex; flex-direction: column; gap: 20px; width: 100%; }
@@ -129,17 +141,33 @@
     .prem-amount .unit { font-size: 16px; color: var(--text-grey); font-weight: 500; }
 
     /* Projection Table Styles */
-    .projection-card { background: #ffffff; border-radius: 16px; padding: 25px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-top: 10px; }
+    .projection-card { background: #ffffff; border-radius: 16px; padding: 25px; border: 1px solid var(--primary); box-shadow: 0 10px 30px rgba(232,102,20,0.1); margin-top: 10px; cursor: pointer; transition: 0.3s; position: relative;}
+    .projection-card:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(232,102,20,0.15); }
+    .projection-card::after {
+        content: "\f0b2 ขยาย / บันทึกภาพตารางนี้";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        position: absolute;
+        top: 25px;
+        right: 25px;
+        background: var(--primary);
+        color: white;
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 13px;
+        box-shadow: 0 4px 10px rgba(232,102,20,0.3);
+    }
     .projection-title { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
     .projection-title i { color: var(--gold); }
-    .proj-table-wrapper { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border-color); }
-    .proj-table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: center; min-width: 600px; }
-    .proj-table th { background: linear-gradient(135deg, #1a1e29, #2c3245); color: white; padding: 12px 10px; font-weight: 600; border-bottom: 3px solid var(--gold); white-space: nowrap; }
-    .proj-table td { padding: 12px 10px; border-bottom: 1px solid var(--border-color); color: var(--text-dark); }
+    .proj-table-wrapper { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border-color); pointer-events: none; /* Make table non-clickable individually */ }
+    .proj-table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: center; min-width: 700px; }
+    .proj-table th { background: linear-gradient(135deg, #1a1e29, #2c3245); color: white; padding: 12px 10px; font-weight: 600; border-bottom: 3px solid var(--gold); white-space: nowrap; border-right: 1px solid rgba(255,255,255,0.1);}
+    .proj-table td { padding: 12px 10px; border-bottom: 1px solid var(--border-color); color: var(--text-dark); border-right: 1px solid var(--border-color);}
     .proj-table tr:last-child td { border-bottom: none; }
     .proj-table tr:nth-child(even) { background-color: #f8fafc; }
     .td-highlight { font-weight: 700; color: #b45309; }
     .td-guarantee { font-weight: 600; color: var(--primary); }
+    .td-acc { color: var(--navy); font-weight: 600; background: #f1f5f9; }
     .proj-footer { font-size: 12px; color: var(--text-grey); margin-top: 15px; line-height: 1.5; background: #fffcf5; padding: 10px; border-radius: 8px; border: 1px dashed #fde68a; }
 
     /* Custom Simulation Bar */
@@ -171,23 +199,8 @@
         padding-top: 30px;
         box-shadow: 0 10px 20px rgba(0,0,0,0.03);
     }
-    .formula-box {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        padding: 15px;
-        border-radius: 8px;
-        margin-top: 15px;
-        overflow-x: auto;
-    }
-    .formula-math {
-        font-family: 'Courier New', Courier, monospace;
-        font-size: 15px;
-        white-space: nowrap;
-        background: white;
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid #cbd5e1;
-    }
+    .formula-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin-top: 15px; overflow-x: auto; }
+    .formula-math { font-family: 'Courier New', Courier, monospace; font-size: 15px; white-space: nowrap; background: white; padding: 10px; border-radius: 5px; border: 1px solid #cbd5e1; }
 
     /* Official Link Button */
     .official-link-box {
@@ -233,10 +246,44 @@
     .sticky-content { max-width: 1200px; margin: auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
     .btn-line { background: #06C755; color: white; padding: 12px 25px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 16px; display: flex; align-items: center; gap: 8px; border: none; }
 
+    /* =========================================
+       REPORT OVERLAY STYLES 
+       ========================================= */
+    #report-overlay {
+        display: none; position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh;
+        background: rgba(244, 246, 248, 0.95); z-index: 999999; padding: 40px 20px; box-sizing: border-box;
+    }
+    .close-report-btn {
+        position: fixed; top: 20px; right: 30px; background: #e86614; color: white;
+        border: none; border-radius: 50%; width: 50px; height: 50px; font-size: 24px;
+        cursor: pointer; z-index: 1000000; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        display: flex; align-items: center; justify-content: center; transition: 0.2s;
+    }
+    .close-report-btn:hover { background: #c2410c; transform: scale(1.05); }
+
+    .action-buttons { text-align: center; margin-top: 30px; margin-bottom: 50px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+    .btn-act { padding: 12px 20px; border-radius: 8px; font-family: 'Prompt'; cursor: pointer; font-size: 16px; border: none; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; width: 160px; }
+    .btn-print { background: #333; color: white; }
+    .btn-save { background: #06C755; color: white; box-shadow: 0 4px 15px rgba(6, 199, 85, 0.3); }
+    .btn-pdf { background: #e74c3c; color: white; box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3); }
+    .btn-act:hover:not(:disabled) { opacity: 0.9; transform: translateY(-2px); }
+
+    @media print {
+        body, * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        #main-content, .sticky-bar, .action-buttons, .close-report-btn { display: none !important; }
+        body { background: white; padding: 0; margin: 0;}
+        #report-overlay { position: static; display: block !important; background: white !important; padding: 0; }
+        #capture-area { box-shadow: none !important; margin: 0 auto !important; width: 100% !important; max-width: 100% !important; }
+        @page { size: landscape; margin: 10mm; }
+    }
+
     @media (max-width: 900px) {
         .container { flex-direction: column; }
         .left-panel { width: 100%; position: static; }
-        .header-title-box { margin: 15px 0 0 0 !important; padding: 20px; } /* ปรับขอบในมือถือให้พอดีรูปภาพ */
+        .header-title-box { margin: 15px 0 0 0 !important; padding: 20px; }
         .header-title-box h1 { font-size: 24px; }
         .feature-grid { grid-template-columns: 1fr; }
         .index-section { flex-direction: column; text-align: center; gap: 20px; padding: 20px;}
@@ -245,6 +292,8 @@
         .prem-amount { text-align: center; }
         .official-link-box { flex-direction: column; gap: 15px; text-align: center; }
         .official-link-box a { width: 100%; justify-content: center; }
+        .projection-card::after { top: -15px; right: 50%; transform: translateX(50%); white-space: nowrap;}
+        #report-overlay { padding: 10px; }
     }
 </style>
 </head>
@@ -252,9 +301,7 @@
 
 <div id="main-content">
     <div class="header-banner">
-        <!-- ใส่รูปภาพปกตรงนี้ โค้ดถูกจัดให้พอดีไม่ทับกล่องข้อความ -->
         <img src="banner.jpg" alt="SUPER SMART SAVINGS" style="width: 100%; height: auto; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: block; background-color: var(--secondary); min-height: 200px; object-fit: cover;">
-        
         <div class="header-title-box">
             <h1>SUPER SMART SAVINGS <span>(Index Linked)</span></h1>
             <p>โอกาสรับผลตอบแทนเพิ่ม ควบคู่การคุ้มครองชีวิตและการันตีเงินต้น</p>
@@ -286,8 +333,12 @@
 
                 <div class="form-group">
                     <div class="sum-box">
-                        <label style="margin: 0; color: var(--navy); display: flex; justify-content: space-between;">
-                            ทุนประกันภัย <strong style="color: var(--primary); font-size: 18px;"><span id="sum-display-text">300,000</span> บาท</strong>
+                        <label style="margin: 0; color: var(--navy); display: flex; justify-content: space-between; align-items: center;">
+                            ทุนประกันภัย 
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <input type="text" id="sum-input-text" value="300,000" class="sum-input-box" onblur="handleSumInput(this.value)" onfocus="this.value = this.value.replace(/,/g, '')">
+                                <strong style="color: var(--primary); font-size: 18px;">บาท</strong>
+                            </div>
                         </label>
                         <input type="range" id="sum-slider" min="20000" max="20000000" step="10000" value="300000" oninput="setSum(this.value)">
                         <div class="quick-sums">
@@ -362,7 +413,6 @@
                 </div>
                 
                 <div class="dash-grid">
-                    <!-- Guaranteed Column -->
                     <div class="dash-col" style="border-top: 4px solid var(--primary);">
                         <div class="col-header" style="color: var(--primary);"><i class="fa-solid fa-lock"></i> ผลประโยชน์ที่รับรองการจ่าย</div>
                         
@@ -385,7 +435,6 @@
                         </div>
                     </div>
 
-                    <!-- Non-Guaranteed & Protection Column -->
                     <div class="dash-col" style="border-top: 4px solid var(--gold); background: #fffcf5;">
                         <div class="col-header" style="color: #b45309;"><i class="fa-solid fa-arrow-trend-up"></i> โอกาสรับผลประโยชน์เพิ่ม & คุ้มครอง</div>
                         
@@ -425,8 +474,8 @@
                 </div>
             </div>
 
-            <!-- Dynamic Projection Table -->
-            <div class="projection-card" id="projection-table-section">
+            <!-- Dynamic Projection Table (Clickable for report) -->
+            <div class="projection-card" id="projection-table-section" onclick="openProjectionReport()">
                 <div class="projection-title">
                     <i class="fa-solid fa-chart-column"></i> ตารางประมาณการผลประโยชน์ดัชนี Morgan Stanley
                 </div>
@@ -438,9 +487,10 @@
                     <table class="proj-table">
                         <thead>
                             <tr>
-                                <th rowspan="2" style="border-right: 1px solid rgba(255,255,255,0.2);">สิ้นปีกรมธรรม์ที่</th>
-                                <th rowspan="2" style="border-right: 1px solid rgba(255,255,255,0.2);">เงินคืนรับรองการจ่าย</th>
-                                <th colspan="3">ประมาณการผลประโยชน์ที่ไม่รับรองการจ่าย (โอกาสรับโบนัส)</th>
+                                <th rowspan="2">สิ้นปีกรมธรรม์ที่</th>
+                                <th rowspan="2">เบี้ยประกันสะสม</th>
+                                <th rowspan="2">เงินคืนรับรองการจ่าย</th>
+                                <th colspan="3" style="border-bottom: 1px solid rgba(255,255,255,0.2);">ประมาณการผลประโยชน์ที่ไม่รับรองการจ่าย (โอกาสรับโบนัส)</th>
                             </tr>
                             <tr>
                                 <th>กรณีดัชนีเติบโต 2% ต่อปี</th>
@@ -451,6 +501,7 @@
                         <tbody>
                             <tr>
                                 <td><strong id="proj-yr-label">ปีที่ 15</strong></td>
+                                <td class="td-acc" id="proj-acc-prem-15">4,455,000</td>
                                 <td class="td-guarantee">-</td>
                                 <td class="td-highlight" id="proj-y1-2">770,492</td>
                                 <td class="td-highlight" id="proj-y1-4">1,784,005</td>
@@ -458,6 +509,7 @@
                             </tr>
                             <tr>
                                 <td><strong>ปีที่ 25</strong></td>
+                                <td class="td-acc" id="proj-acc-prem-25">4,455,000</td>
                                 <td class="td-guarantee" id="proj-guarantee-mat">4,440,000</td>
                                 <td class="td-highlight" id="proj-y2-2">1,426,937</td>
                                 <td class="td-highlight" id="proj-y2-4">3,710,570</td>
@@ -465,6 +517,7 @@
                             </tr>
                             <tr style="background-color: #f1f5f9;">
                                 <td><strong>รวมผลประโยชน์ไม่รับรอง</strong></td>
+                                <td class="td-acc">-</td>
                                 <td class="td-guarantee">-</td>
                                 <td class="td-highlight" style="font-size: 15px;" id="proj-ng-tot-2">2,197,429</td>
                                 <td class="td-highlight" style="font-size: 15px;" id="proj-ng-tot-4">5,494,575</td>
@@ -472,6 +525,7 @@
                             </tr>
                             <tr style="background-color: #fff2e8; border-top: 2px solid var(--primary);">
                                 <td><strong>รวมรับผลประโยชน์ทั้งหมด</strong><br><span style="font-size:11px;">(รวมเงินคืนรายปี <span id="proj-cb-total-text">72,000</span> บ.)</span></td>
+                                <td class="td-acc">-</td>
                                 <td class="td-guarantee" style="font-size: 16px;" id="proj-guarantee-total">4,512,000</td>
                                 <td class="td-highlight" style="font-size: 16px;" id="proj-tot-2">6,709,429</td>
                                 <td class="td-highlight" style="font-size: 16px;" id="proj-tot-4">10,006,575</td>
@@ -480,82 +534,75 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
 
-                <!-- Custom Simulation Bar -->
-                <div class="sim-wrapper">
-                    <div class="sim-bar" onclick="toggleSim()">
-                        <div><i class="fa-solid fa-calculator"></i> จำลองผลตอบแทนแบบกำหนดเอง และดูสูตรคำนวณ</div>
-                        <i class="fa-solid fa-chevron-down" id="sim-icon"></i>
+            <!-- Custom Simulation Bar -->
+            <div class="sim-wrapper">
+                <div class="sim-bar" onclick="toggleSim()">
+                    <div><i class="fa-solid fa-calculator"></i> จำลองผลตอบแทนแบบกำหนดเอง และดูสูตรคำนวณ</div>
+                    <i class="fa-solid fa-chevron-down" id="sim-icon"></i>
+                </div>
+                <div class="sim-content" id="sim-content">
+                    <div style="margin-bottom: 15px; font-weight: 600; color: var(--navy); display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        สมมุติระดับดัชนีเติบโตเฉลี่ย 
+                        <input type="number" id="custom-rate" value="5" step="0.5" oninput="updateCustomCalc()" style="width: 90px; font-size: 18px; padding: 5px; text-align: center; border: 2px solid var(--primary); border-radius: 8px; color: var(--primary); font-weight: bold; outline:none;"> % ต่อปี
                     </div>
-                    <div class="sim-content" id="sim-content">
-                        <div style="margin-bottom: 15px; font-weight: 600; color: var(--navy); display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                            สมมุติระดับดัชนีเติบโตเฉลี่ย 
-                            <input type="number" id="custom-rate" value="5" step="0.5" oninput="updateCustomCalc()" style="width: 90px; font-size: 18px; padding: 5px; text-align: center; border: 2px solid var(--primary); border-radius: 8px; color: var(--primary); font-weight: bold; outline:none;"> % ต่อปี
+                    
+                    <table class="proj-table" style="min-width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>สิ้นปีกรมธรรม์ที่</th>
+                                <th>ผลประโยชน์ที่ไม่รับรองการจ่าย (บาท)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>ปีที่ <span class="txt-bonus-year-sim">15</span></td>
+                                <td class="td-highlight" id="custom-res-1" style="font-size: 16px;">0</td>
+                            </tr>
+                            <tr>
+                                <td>ปีที่ 25</td>
+                                <td class="td-highlight" id="custom-res-2" style="font-size: 16px;">0</td>
+                            </tr>
+                            <tr style="background-color: #fff2e8; border-top: 2px solid var(--primary);">
+                                <td><strong>รวมรับผลประโยชน์ทั้งหมดตลอดสัญญา</strong><br><span style="font-size: 11px;">(รวมเงินการันตี <span id="custom-res-guarantee">0</span> บ.)</span></td>
+                                <td class="td-highlight" style="font-size: 20px; color: #c2410c;" id="custom-res-total">0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="margin-top: 25px; font-size: 15px; color: var(--navy); font-weight: 700;">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i> ตัวอย่างสูตรการคำนวณอ้างอิงจากเอกสาร
+                    </div>
+                    <div class="formula-box">
+                        <div style="font-size: 13px; color: var(--text-grey); margin-bottom: 8px;">สูตรคำนวณผลประโยชน์ปีที่ <span class="txt-bonus-year-sim">15</span>:</div>
+                        <div class="formula-math">
+                            50% &times; <span class="fml-prem">0</span> &times; 100% (PR) &times; Max<big>(</big> (<span id="fml-idx1">0</span> / 100) - 1, 0 <big>)</big> = <strong style="color:var(--primary)"><span id="fml-res1">0</span></strong> บาท
                         </div>
                         
-                        <table class="proj-table" style="min-width: 100%;">
-                            <thead>
-                                <tr>
-                                    <th>สิ้นปีกรมธรรม์ที่</th>
-                                    <th>ผลประโยชน์ที่ไม่รับรองการจ่าย (บาท)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>ปีที่ <span class="txt-bonus-year-sim">15</span></td>
-                                    <td class="td-highlight" id="custom-res-1" style="font-size: 16px;">0</td>
-                                </tr>
-                                <tr>
-                                    <td>ปีที่ 25</td>
-                                    <td class="td-highlight" id="custom-res-2" style="font-size: 16px;">0</td>
-                                </tr>
-                                <tr style="background-color: #fff2e8; border-top: 2px solid var(--primary);">
-                                    <td><strong>รวมรับผลประโยชน์ทั้งหมดตลอดสัญญา</strong><br><span style="font-size: 11px;">(รวมเงินการันตี <span id="custom-res-guarantee">0</span> บ.)</span></td>
-                                    <td class="td-highlight" style="font-size: 20px; color: #c2410c;" id="custom-res-total">0</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <div style="margin-top: 25px; font-size: 15px; color: var(--navy); font-weight: 700;">
-                            <i class="fa-solid fa-magnifying-glass-chart"></i> ตัวอย่างสูตรการคำนวณอ้างอิงจากเอกสาร
+                        <div style="font-size: 13px; color: var(--text-grey); margin-top: 15px; margin-bottom: 8px;">สูตรคำนวณผลประโยชน์ปีที่ 25:</div>
+                        <div class="formula-math">
+                            50% &times; <span class="fml-prem">0</span> &times; 100% (PR) &times; Max<big>(</big> (<span id="fml-idx2">0</span> / 100) - 1, 0 <big>)</big> = <strong style="color:var(--primary)"><span id="fml-res2">0</span></strong> บาท
                         </div>
-                        <div class="formula-box">
-                            <div style="font-size: 13px; color: var(--text-grey); margin-bottom: 8px;">สูตรคำนวณผลประโยชน์ปีที่ <span class="txt-bonus-year-sim">15</span>:</div>
-                            <div class="formula-math">
-                                50% &times; <span class="fml-prem">0</span> &times; 100% (PR) &times; Max<big>(</big> (<span id="fml-idx1">0</span> / 100) - 1, 0 <big>)</big> = <strong style="color:var(--primary)"><span id="fml-res1">0</span></strong> บาท
-                            </div>
-                            
-                            <div style="font-size: 13px; color: var(--text-grey); margin-top: 15px; margin-bottom: 8px;">สูตรคำนวณผลประโยชน์ปีที่ 25:</div>
-                            <div class="formula-math">
-                                50% &times; <span class="fml-prem">0</span> &times; 100% (PR) &times; Max<big>(</big> (<span id="fml-idx2">0</span> / 100) - 1, 0 <big>)</big> = <strong style="color:var(--primary)"><span id="fml-res2">0</span></strong> บาท
-                            </div>
-                            <div style="font-size: 12px; color: var(--text-grey); margin-top: 12px; line-height: 1.5;">
-                                * <span class="fml-prem">0</span> คือ เบี้ยประกันภัยรวมตลอดสัญญา (ไม่รวมสัญญาเพิ่มเติม)<br>
-                                * ตัวเลขดัชนี <span id="fml-idx1-info">0</span> และ <span id="fml-idx2-info">0</span> คำนวณจำลองจากอัตราเติบโต <span id="fml-rate-info">5</span>% ต่อปี ตามสูตร (1 + r)^t<br>
-                                * สมมุติอัตราแลกเปลี่ยนคงที่ (FX = 1)
-                            </div>
+                        <div style="font-size: 12px; color: var(--text-grey); margin-top: 12px; line-height: 1.5;">
+                            * <span class="fml-prem">0</span> คือ เบี้ยประกันภัยรวมตลอดสัญญา (ไม่รวมสัญญาเพิ่มเติม)<br>
+                            * ตัวเลขดัชนี <span id="fml-idx1-info">0</span> และ <span id="fml-idx2-info">0</span> คำนวณจำลองจากอัตราเติบโต <span id="fml-rate-info">5</span>% ต่อปี ตามสูตร (1 + r)^t<br>
+                            * สมมุติอัตราแลกเปลี่ยนคงที่ (FX = 1)
                         </div>
                     </div>
-                </div>
-
-                <!-- ลิ้งค์เชื่อมโยงดัชนีของ FWD โดยตรง -->
-                <div class="official-link-box">
-                    <div>
-                        <div style="font-size: 15px; font-weight: 700; color: var(--navy);">เช็กระดับดัชนีและดูสูตรการคำนวณแบบละเอียด</div>
-                        <div style="font-size: 13px; color: var(--text-grey); margin-top: 5px;">ท่านสามารถตรวจสอบดัชนี Multi-Asset Realtime Index 8% VT with 0.5% Decrement ประจำวันได้ที่เว็บไซต์ FWD</div>
-                    </div>
-                    <a href="#" target="_blank" id="fwd-official-link">
-                        ดูรายละเอียดเพิ่มเติม <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    </a>
-                </div>
-                
-                <div class="proj-footer">
-                    * ตัวเลขนี้เป็นเพียงการแสดงตัวอย่างการคำนวณที่ Participation Rate (PR) 100% ตามทุนประกันภัยที่คุณเลือกเท่านั้น ไม่ใช่การการันตีผลประโยชน์ที่จะได้รับจริง<br>
-                    * ผลประโยชน์ที่ไม่รับรองการจ่ายอ้างอิงผลตอบแทนจากดัชนี Morgan Stanley Multi-Asset Realtime Index 8% VT with 0.5% Decrement<br>
-                    * หากในกรณีที่แย่ที่สุด ดัชนีอ้างอิงติดลบหรือไม่มีผลตอบแทน ผลประโยชน์ที่ไม่รับรองการจ่ายจะมีค่าไม่ต่ำกว่าศูนย์ (การันตีเงินต้น)
                 </div>
             </div>
 
+            <div class="official-link-box">
+                <div>
+                    <div style="font-size: 15px; font-weight: 700; color: var(--navy);">เช็กระดับดัชนีและดูสูตรการคำนวณแบบละเอียด</div>
+                    <div style="font-size: 13px; color: var(--text-grey); margin-top: 5px;">ท่านสามารถตรวจสอบดัชนี Multi-Asset Realtime Index 8% VT with 0.5% Decrement ประจำวันได้ที่เว็บไซต์ FWD</div>
+                </div>
+                <a href="#" target="_blank" id="fwd-official-link">
+                    ดูรายละเอียดเพิ่มเติม <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </div>
+            
             <div style="font-size: 12px; color: #94a3b8; text-align: center; margin-top: 10px;">
                 * เบี้ยประกันภัยสามารถนำไปลดหย่อนภาษีได้ตามเงื่อนไขกรมสรรพากร<br>
                 * เอกสารนี้ใช้เพื่อประกอบการนำเสนอเท่านั้น โปรดศึกษารายละเอียดเงื่อนไขจากกรมธรรม์
@@ -576,21 +623,17 @@
     </div>
 </div>
 
+<!-- ================= REPORT OVERLAY ================= -->
+<div id="report-overlay"></div>
+
 <script>
     let currentPlan = '15'; 
     let currentAge = 40;
     let sumInsured = 300000;
     
-    // Multipliers for Projection based on the presentation slides (2%, 4%, 6%)
     const PROJ_MULT = {
-        '15': {
-            yr1: [0.17295, 0.40045, 0.69830], 
-            yr2: [0.32030, 0.83290, 1.64595]  
-        },
-        '7': {
-            yr1: [0.07435, 0.15795, 0.25180], 
-            yr2: [0.32030, 0.83290, 1.64595]  
-        }
+        '15': { yr1: [0.17295, 0.40045, 0.69830], yr2: [0.32030, 0.83290, 1.64595] },
+        '7': { yr1: [0.07435, 0.15795, 0.25180], yr2: [0.32030, 0.83290, 1.64595] }
     };
 
     function formatNum(n) { return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
@@ -605,8 +648,19 @@
     function setSum(v) {
         sumInsured = parseInt(v);
         document.getElementById('sum-slider').value = v;
-        document.getElementById('sum-display-text').innerText = formatNum(v);
+        document.getElementById('sum-input-text').value = formatNum(v);
         calculate();
+    }
+
+    function handleSumInput(val) {
+        let num = parseInt(val.toString().replace(/,/g, ''));
+        if (isNaN(num)) num = 300000;
+        if (num < 20000) num = 20000;
+        if (num > 20000000) num = 20000000;
+        
+        let age = parseInt(document.getElementById('age-input').value) || 0;
+        if (currentPlan === '7' && age >= 71 && num < 150000) { num = 150000; }
+        setSum(num);
     }
 
     function toggleSim() {
@@ -629,10 +683,7 @@
         let annualPremium = (sumInsured / 1000) * (baseRate - discountPer1000);
         let totalPremium = annualPremium * parseInt(currentPlan);
 
-        let t1 = parseInt(currentPlan); 
-        let t2 = 25;
-
-        // Calculate index growth factor: (1 + r)^t
+        let t1 = parseInt(currentPlan); let t2 = 25;
         let idx1_raw = Math.pow(1 + customRate/100, t1);
         let idx2_raw = Math.pow(1 + customRate/100, t2);
 
@@ -652,15 +703,11 @@
         let premTexts = document.getElementsByClassName('fml-prem');
         for (let i=0; i<premTexts.length; i++) { premTexts[i].innerText = formatNum(totalPremium); }
         
-        let idx1_disp = (idx1_raw * 100).toFixed(2);
-        let idx2_disp = (idx2_raw * 100).toFixed(2);
-
-        document.getElementById('fml-idx1').innerText = idx1_disp;
-        document.getElementById('fml-idx2').innerText = idx2_disp;
-        document.getElementById('fml-idx1-info').innerText = idx1_disp;
-        document.getElementById('fml-idx2-info').innerText = idx2_disp;
+        document.getElementById('fml-idx1').innerText = (idx1_raw * 100).toFixed(2);
+        document.getElementById('fml-idx2').innerText = (idx2_raw * 100).toFixed(2);
+        document.getElementById('fml-idx1-info').innerText = (idx1_raw * 100).toFixed(2);
+        document.getElementById('fml-idx2-info').innerText = (idx2_raw * 100).toFixed(2);
         document.getElementById('fml-rate-info').innerText = customRate;
-        
         document.getElementById('fml-res1').innerText = formatNum(Math.round(benefit1));
         document.getElementById('fml-res2').innerText = formatNum(Math.round(benefit2));
     }
@@ -670,30 +717,18 @@
         let warning = document.getElementById('age-warning');
         
         let maxAge = currentPlan === '7' ? 75 : 70;
-        if (currentAge < 0 || currentAge > maxAge) {
-            warning.style.display = 'block';
-            return;
-        } else {
-            warning.style.display = 'none';
-        }
+        if (currentAge < 0 || currentAge > maxAge) { warning.style.display = 'block'; return; } 
+        else { warning.style.display = 'none'; }
 
         if (currentPlan === '7' && currentAge >= 71 && sumInsured < 150000) {
             sumInsured = 150000;
             document.getElementById('sum-slider').value = sumInsured;
-            document.getElementById('sum-display-text').innerText = formatNum(sumInsured);
+            document.getElementById('sum-input-text').value = formatNum(sumInsured);
         }
 
         let baseRate = 1000;
-        let discountPer1000 = 0;
-        let discountMsg = "";
-
-        if (sumInsured >= 500000) {
-            discountPer1000 = 20;
-            discountMsg = "ได้รับส่วนลดเบี้ยประกันภัยขนาดใหญ่ 20 บาท ต่อทุน 1,000";
-        } else if (sumInsured >= 200000) {
-            discountPer1000 = 10;
-            discountMsg = "ได้รับส่วนลดเบี้ยประกันภัย 10 บาท ต่อทุน 1,000";
-        }
+        let discountPer1000 = (sumInsured >= 500000) ? 20 : ((sumInsured >= 200000) ? 10 : 0);
+        let discountMsg = discountPer1000 > 0 ? (discountPer1000 === 20 ? "ได้รับส่วนลดเบี้ยประกันภัยขนาดใหญ่ 20 บาท ต่อทุน 1,000" : "ได้รับส่วนลดเบี้ยประกันภัย 10 บาท ต่อทุน 1,000") : "";
 
         if (discountPer1000 > 0) {
             document.getElementById('discount-msg').style.display = 'flex';
@@ -714,7 +749,6 @@
         let matBenefit = sumInsured * matPercent;
         let totalGuaranteed = cbTotal + matBenefit;
 
-        // Projection calculation logic (Standard 2,4,6%)
         let m_y1 = PROJ_MULT[currentPlan].yr1;
         let m_y2 = PROJ_MULT[currentPlan].yr2;
 
@@ -734,11 +768,10 @@
         let grand_tot_4 = totalGuaranteed + ng_tot_4;
         let grand_tot_6 = totalGuaranteed + ng_tot_6;
 
-        // Update UI
+        // UI Updates
         document.getElementById('pres-plan-name').innerText = `25/${currentPlan}`;
         document.getElementById('pres-age').innerText = currentAge;
         document.getElementById('dash-sa').innerText = formatNum(sumInsured);
-        
         document.getElementById('val-cb-yearly').innerText = formatNum(cbYearly);
         document.getElementById('val-cb-total').innerText = formatNum(cbTotal);
         document.getElementById('val-maturity').innerText = formatNum(matBenefit);
@@ -756,10 +789,12 @@
         document.getElementById('proj-yr-label').innerText = `ปีที่ ${currentPlan}`;
         document.getElementById('proj-info-text').innerText = `สำหรับแผน 25/${currentPlan} ทุนประกันภัย ${formatNum(sumInsured)} บาท (เบี้ยประกันภัยรวมตลอดสัญญา ${formatNum(totalPremium)} บาท)`;
         
+        document.getElementById('proj-acc-prem-15').innerText = formatNum(totalPremium);
+        document.getElementById('proj-acc-prem-25').innerText = formatNum(totalPremium);
+
         document.getElementById('proj-y1-2').innerText = formatNum(proj_y1_2);
         document.getElementById('proj-y1-4').innerText = formatNum(proj_y1_4);
         document.getElementById('proj-y1-6').innerText = formatNum(proj_y1_6);
-        
         document.getElementById('proj-y2-2').innerText = formatNum(proj_y2_2);
         document.getElementById('proj-y2-4').innerText = formatNum(proj_y2_4);
         document.getElementById('proj-y2-6').innerText = formatNum(proj_y2_6);
@@ -776,30 +811,201 @@
         document.getElementById('proj-guarantee-mat').innerText = formatNum(matBenefit);
         document.getElementById('proj-cb-total-text').innerText = formatNum(cbTotal);
 
-        const fwdLink = currentPlan === '15' 
-            ? "https://www.fwd.co.th/th/index/ms-ma-8v050d-e86a/" 
-            : "https://www.fwd.co.th/th/index/ms-ma-8v050d-e87a/";
-        document.getElementById('fwd-official-link').href = fwdLink;
+        document.getElementById('fwd-official-link').href = currentPlan === '15' ? "https://www.fwd.co.th/th/index/ms-ma-8v050d-e86a/" : "https://www.fwd.co.th/th/index/ms-ma-8v050d-e87a/";
 
-        // Update Custom Simulator if open
-        if (document.getElementById('sim-content').style.display === 'block') {
-            updateCustomCalc();
-        }
+        if (document.getElementById('sim-content').style.display === 'block') { updateCustomCalc(); }
     }
 
     function sendToLineOA() {
         const age = document.getElementById('age-input').value;
         const sa = document.getElementById('sum-display-text').innerText;
         const premium = document.getElementById('display-premium').innerText;
-        
         const msg = `สนใจแผน SUPER SMART SAVINGS 25/${currentPlan} (Index Linked)\nอายุ: ${age} ปี\nทุนประกัน: ${sa} บาท\nเบี้ยประกัน: ${premium} บาท/ปี`;
         
         alert("ระบบคัดลอกข้อความสรุปแล้ว โปรดกด 'วาง' ในช่องแชท LINE เพื่อสอบถามตัวแทน");
-        
-        navigator.clipboard.writeText(msg).then(() => {
-            window.open("https://lin.ee/uS2hb0q", "_blank");
+        navigator.clipboard.writeText(msg).then(() => { window.open("https://lin.ee/uS2hb0q", "_blank"); }).catch(err => { window.open("https://lin.ee/uS2hb0q", "_blank"); });
+    }
+
+    // ==========================================
+    // REPORT OVERLAY FUNCTIONS
+    // ==========================================
+    function openProjectionReport() {
+        const age = document.getElementById('age-input').value;
+        const plan = `25/${currentPlan}`;
+        const sa = document.getElementById('sum-display-text').innerText;
+        const totalPrem = document.getElementById('display-total-premium').innerText;
+
+        // Fetching table values dynamically
+        const y1_2 = document.getElementById('proj-y1-2').innerText;
+        const y1_4 = document.getElementById('proj-y1-4').innerText;
+        const y1_6 = document.getElementById('proj-y1-6').innerText;
+        const y2_2 = document.getElementById('proj-y2-2').innerText;
+        const y2_4 = document.getElementById('proj-y2-4').innerText;
+        const y2_6 = document.getElementById('proj-y2-6').innerText;
+        const ng_tot_2 = document.getElementById('proj-ng-tot-2').innerText;
+        const ng_tot_4 = document.getElementById('proj-ng-tot-4').innerText;
+        const ng_tot_6 = document.getElementById('proj-ng-tot-6').innerText;
+        const tot_2 = document.getElementById('proj-tot-2').innerText;
+        const tot_4 = document.getElementById('proj-tot-4').innerText;
+        const tot_6 = document.getElementById('proj-tot-6').innerText;
+        const guar_mat = document.getElementById('proj-guarantee-mat').innerText;
+        const guar_tot = document.getElementById('proj-guarantee-total').innerText;
+        const cb_tot = document.getElementById('proj-cb-total-text').innerText;
+
+        let htmlContent = `
+            <button class="close-report-btn" onclick="closeReport()"><i class="fa-solid fa-xmark"></i></button>
+            <div id="capture-area" style="max-width: 1000px; margin: 0 auto; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); font-family: 'Prompt', sans-serif;">
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--primary); padding-bottom: 20px; margin-bottom: 30px;">
+                    <div>
+                        <h1 style="color: var(--navy); margin: 0; font-size: 28px;">ตารางประมาณการผลประโยชน์</h1>
+                        <h2 style="color: var(--primary); margin: 5px 0 0 0; font-size: 20px;">SUPER SMART SAVINGS ${plan} (Index Linked)</h2>
+                    </div>
+                    <div style="background: #f8fafc; padding: 10px 20px; border-radius: 12px; border: 1px solid var(--border-color); text-align: right;">
+                        <div style="font-size: 14px; color: var(--text-grey);">ลูกค้าอายุ <strong style="color:var(--text-dark);">${age}</strong> ปี</div>
+                        <div style="font-size: 14px; color: var(--text-grey);">ทุนประกันภัย <strong style="color:var(--primary); font-size:16px;">${sa}</strong> บาท</div>
+                        <div style="font-size: 14px; color: var(--text-grey);">เบี้ยรวมตลอดสัญญา <strong style="color:var(--navy);">${totalPrem}</strong> บาท</div>
+                    </div>
+                </div>
+
+                <div class="proj-table-wrapper" style="pointer-events: auto;">
+                    <table class="proj-table" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">สิ้นปีกรมธรรม์ที่</th>
+                                <th rowspan="2">เบี้ยประกันสะสม</th>
+                                <th rowspan="2">เงินคืนรับรองการจ่าย</th>
+                                <th colspan="3" style="border-bottom: 1px solid rgba(255,255,255,0.2);">ประมาณการผลประโยชน์ที่ไม่รับรองการจ่าย (โอกาสรับโบนัส)</th>
+                            </tr>
+                            <tr>
+                                <th>กรณีดัชนีเติบโต 2% ต่อปี</th>
+                                <th>กรณีดัชนีเติบโต 4% ต่อปี</th>
+                                <th style="color: var(--gold);">กรณีดัชนีเติบโต 6% ต่อปี</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>ปีที่ ${currentPlan}</strong></td>
+                                <td class="td-acc">${totalPrem}</td>
+                                <td class="td-guarantee">-</td>
+                                <td class="td-highlight">${y1_2}</td>
+                                <td class="td-highlight">${y1_4}</td>
+                                <td class="td-highlight" style="font-size: 16px;">${y1_6}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ปีที่ 25</strong></td>
+                                <td class="td-acc">${totalPrem}</td>
+                                <td class="td-guarantee">${guar_mat}</td>
+                                <td class="td-highlight">${y2_2}</td>
+                                <td class="td-highlight">${y2_4}</td>
+                                <td class="td-highlight" style="font-size: 16px;">${y2_6}</td>
+                            </tr>
+                            <tr style="background-color: #f1f5f9;">
+                                <td><strong>รวมผลประโยชน์ไม่รับรอง</strong></td>
+                                <td class="td-acc">-</td>
+                                <td class="td-guarantee">-</td>
+                                <td class="td-highlight" style="font-size: 15px;">${ng_tot_2}</td>
+                                <td class="td-highlight" style="font-size: 15px;">${ng_tot_4}</td>
+                                <td class="td-highlight" style="font-size: 16px; color: #c2410c;">${ng_tot_6}</td>
+                            </tr>
+                            <tr style="background-color: #fff2e8; border-top: 2px solid var(--primary);">
+                                <td><strong>รวมรับผลประโยชน์ทั้งหมด</strong><br><span style="font-size:11px;">(รวมเงินคืนรายปี ${cb_tot} บ.)</span></td>
+                                <td class="td-acc">-</td>
+                                <td class="td-guarantee" style="font-size: 16px;">${guar_tot}</td>
+                                <td class="td-highlight" style="font-size: 16px;">${tot_2}</td>
+                                <td class="td-highlight" style="font-size: 16px;">${tot_4}</td>
+                                <td class="td-highlight" style="font-size: 18px; color: #c2410c;">${tot_6}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="font-size: 12px; color: var(--text-grey); margin-top: 15px; line-height: 1.5; background: #fffcf5; padding: 15px; border-radius: 8px; border: 1px dashed #fde68a;">
+                    <strong>หมายเหตุสำคัญ:</strong><br>
+                    * ตัวเลขนี้เป็นเพียงการแสดงตัวอย่างการคำนวณที่ Participation Rate (PR) 100% ตามทุนประกันภัยที่เลือกเท่านั้น ไม่ใช่การการันตีผลประโยชน์ที่จะได้รับจริง<br>
+                    * ผลประโยชน์ที่ไม่รับรองการจ่ายอ้างอิงผลตอบแทนจากดัชนี Morgan Stanley Multi-Asset Realtime Index 8% VT with 0.5% Decrement<br>
+                    * หากในกรณีที่แย่ที่สุด ดัชนีอ้างอิงติดลบหรือไม่มีผลตอบแทน ผลประโยชน์ที่ไม่รับรองการจ่ายจะมีค่าไม่ต่ำกว่าศูนย์ (การันตีเงินต้นไม่สูญหาย)
+                </div>
+
+                <div style="margin-top: 30px; display: flex; align-items: center; gap: 15px; background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid var(--border-color);">
+                    <img src="agent.png" alt="ตัวแทน" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);" onerror="this.src='https://placehold.co/100x100/e86614/ffffff?text=Agent'">
+                    <div>
+                        <div style="font-weight: 700; color: var(--navy); font-size: 16px;">นฤมล คำใบ (ต๋อย)</div>
+                        <div style="font-size: 13px; color: var(--text-grey);">ผู้จัดการขาย | ใบอนุญาต 6901010926</div>
+                        <div style="font-size: 14px; font-weight: 600; color: var(--primary); margin-top: 3px;"><i class="fa-solid fa-phone"></i> โทร: 086-901-7235 &nbsp; <i class="fab fa-line" style="color:#06C755;"></i> Line: @toifwd</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button onclick="window.print()" class="btn-act btn-print"><i class="fa-solid fa-print"></i> พิมพ์</button>
+                <button onclick="saveAsImage()" class="btn-act btn-save" id="save-btn"><i class="fa-solid fa-image"></i> เซฟเป็นรูปภาพ</button>
+                <button onclick="saveAsPDF()" class="btn-act btn-pdf" id="pdf-btn"><i class="fa-solid fa-file-pdf"></i> เซฟเป็น PDF</button>
+            </div>
+        `;
+
+        document.getElementById('main-content').style.display = 'none';
+        document.querySelector('.sticky-bar').style.display = 'none';
+        const overlay = document.getElementById('report-overlay');
+        overlay.innerHTML = htmlContent;
+        overlay.style.display = 'block';
+        window.scrollTo(0,0);
+    }
+
+    function closeReport() {
+        document.getElementById('report-overlay').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+        document.querySelector('.sticky-bar').style.display = 'block';
+        window.scrollTo(0,0);
+    }
+
+    function saveAsImage() {
+        const btn = document.getElementById('save-btn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังประมวลผล...';
+        btn.disabled = true;
+
+        const target = document.getElementById("capture-area");
+        html2canvas(target, { scale: 2, backgroundColor: "#ffffff" }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `ตารางประมาณการผลประโยชน์-FWD-SSS.jpg`;
+            link.href = canvas.toDataURL('image/jpeg', 0.95);
+            link.click();
+            btn.innerHTML = originalText;
+            btn.disabled = false;
         }).catch(err => {
-            window.open("https://lin.ee/uS2hb0q", "_blank");
+            alert("เกิดข้อผิดพลาด: " + err);
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        });
+    }
+
+    function saveAsPDF() {
+        const btn = document.getElementById('pdf-btn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังสร้าง PDF...';
+        btn.disabled = true;
+
+        const target = document.getElementById("capture-area");
+        html2canvas(target, { scale: 2, backgroundColor: "#ffffff" }).then(canvas => {
+            const imgData = canvas.toDataURL('image/jpeg', 0.95);
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('l', 'mm', 'a4'); // Landscape A4
+            
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const margin = 10;
+            const calcWidth = pdfWidth - (margin * 2);
+            const calcHeight = (canvas.height * calcWidth) / canvas.width;
+            
+            pdf.addImage(imgData, 'JPEG', margin, margin, calcWidth, calcHeight);
+            pdf.save(`ตารางประมาณการผลประโยชน์-FWD-SSS.pdf`);
+            
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }).catch(err => {
+            alert("เกิดข้อผิดพลาด: " + err);
+            btn.innerHTML = originalText;
+            btn.disabled = false;
         });
     }
 
