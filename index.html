@@ -315,16 +315,43 @@
     .btn-pdf { background: #e74c3c; color: white; box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3); }
     .btn-act:hover:not(:disabled) { opacity: 0.9; transform: translateY(-2px); }
 
+    /* Print Styles สำหรับ A4 อย่างเดียว */
     @media print {
+        @page {
+            size: A4 portrait;
+            margin: 0; 
+        }
         body, * {
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
         }
-        #main-content, .sticky-bar, .action-buttons, .close-report-btn, .dl-brochure-tab { display: none !important; }
-        body { background: white; padding: 0; margin: 0;}
-        #report-overlay { position: static; display: block !important; background: white !important; padding: 0; }
-        #capture-area { box-shadow: none !important; margin: 0 auto !important; width: 100% !important; max-width: 100% !important; }
-        @page { size: portrait; margin: 5mm; }
+        body { 
+            background: white !important; 
+            padding: 0 !important; 
+            margin: 0 !important;
+        }
+        #main-content, .sticky-bar, .action-buttons, .close-report-btn, .dl-brochure-tab { 
+            display: none !important; 
+        }
+        #report-overlay { 
+            position: absolute !important; 
+            top: 0 !important; 
+            left: 0 !important; 
+            display: block !important; 
+            background: white !important; 
+            padding: 0 !important; 
+            margin: 0 !important;
+            width: 100% !important;
+        }
+        #capture-area { 
+            width: 210mm !important;
+            min-height: 297mm !important;
+            box-shadow: none !important; 
+            margin: 0 auto !important; 
+            padding: 10mm 15mm !important; /* ระยะขอบกระดาษตอนพิมพ์ */
+            border-radius: 0 !important;
+            page-break-after: avoid;
+        }
     }
 
     @media (max-width: 900px) {
@@ -343,7 +370,6 @@
         .projection-card { margin-top: 20px; padding: 15px; }
         .projection-card::after { top: -12px; right: 50%; transform: translateX(50%); white-space: nowrap; font-size: 11px; padding: 4px 10px;}
         #report-overlay { padding: 10px; }
-        .footer-flex-container { flex-direction: column; }
         .dl-brochure-tab { bottom: 85px; right: 15px; padding: 10px 18px; font-size: 13px; }
         .dl-brochure-tab i { font-size: 18px; }
     }
@@ -901,7 +927,7 @@
 
     function sendToLineOA() {
         const age = document.getElementById('age-input').value;
-        const sa = document.getElementById('sum-display-text').innerText;
+        const sa = document.getElementById('dash-sa').innerText;
         const premium = document.getElementById('display-premium').innerText;
         const msg = `สนใจแผน SUPER SMART SAVINGS 25/${currentPlan} (Index Linked)\nอายุ: ${age} ปี\nทุนประกัน: ${sa} บาท\nเบี้ยประกัน: ${premium} บาท/ปี`;
         
@@ -910,7 +936,7 @@
     }
 
     // ==========================================
-    // VERTICAL REPORT OVERLAY GENERATOR
+    // VERTICAL REPORT OVERLAY GENERATOR (A4 Size)
     // ==========================================
     function openProjectionReport() {
         let planInt = parseInt(currentPlan);
@@ -1038,7 +1064,9 @@
 
         let htmlContent = `
             <button class="close-report-btn" onclick="closeReport()"><i class="fa-solid fa-xmark"></i></button>
-            <div id="capture-area" style="max-width: 950px; margin: 0 auto; background: white; padding: 30px; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); font-family: 'Prompt', sans-serif;">
+            
+            <!-- ปรับให้มีขนาดเทียบเท่าสัดส่วน A4 เสมอ (794x1123px) เพื่อความคมชัดตอนส่งออก -->
+            <div id="capture-area" style="width: 794px; min-height: 1123px; margin: 0 auto; background: white; padding: 40px; box-sizing: border-box; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); font-family: 'Prompt', sans-serif; display: flex; flex-direction: column;">
                 
                 <div style="text-align: left; margin-bottom: 15px; position: relative;">
                     <div style="position: absolute; right: 0; top: 0; text-align: right;">
@@ -1057,7 +1085,7 @@
                     <div style="text-align: right; font-size: 11px; margin-top: -10px; color: var(--text-grey);">หน่วย : บาท</div>
                 </div>
 
-                <div class="proj-table-wrapper" style="pointer-events: auto; border: none;">
+                <div class="proj-table-wrapper" style="pointer-events: auto; border: none; overflow: visible;">
                     <table class="proj-table main-table" style="width: 100%; border-collapse: collapse; text-align: center; font-size: 12px;">
                         <thead>
                             <tr>
@@ -1085,7 +1113,8 @@
                     ทั้งนี้ ผลประโยชน์ที่ไม่รับรองการจ่ายที่ได้รับจริงอาจจะไม่เท่ากับจำนวนที่แสดงไว้ในตารางข้างต้น อาจสูงกว่าหรือต่ำกว่าที่แสดงไว้ในตัวอย่างได้ ซึ่งในกรณีที่แย่ที่สุด อาจไม่มีการจ่ายผลประโยชน์ที่ไม่รับรองการจ่าย อย่างไรก็ตาม ผลประโยชน์ที่ไม่รับรองการจ่ายจะมีค่าไม่ต่ำกว่าศูนย์
                 </div>
 
-                <div class="footer-flex-container" style="display: flex; gap: 20px; align-items: flex-end; margin-top: 15px;">
+                <!-- ส่วน Footer จะถูกดันลงไปชิดด้านล่างสุดของพื้นที่ A4 พอดี -->
+                <div class="footer-flex-container" style="display: flex; gap: 20px; align-items: flex-end; margin-top: auto; padding-top: 25px;">
                     <div style="flex: 1; font-size: 9px; color: #94a3b8; line-height: 1.2;">
                         <strong>หมายเหตุ:</strong><br>
                         * Participation Rate (PR) คือ อัตราการมีส่วนร่วมในผลตอบแทนที่เกิดจากการเปลี่ยนแปลงของดัชนี<br>
@@ -1136,10 +1165,11 @@
         btn.disabled = true;
 
         const target = document.getElementById("capture-area");
-        html2canvas(target, { scale: 2, backgroundColor: "#ffffff" }).then(canvas => {
+        // อัพเกรดเป็น scale: 3 และตั้งคุณภาพ max เพื่อความคมชัด
+        html2canvas(target, { scale: 3, useCORS: true, backgroundColor: "#ffffff" }).then(canvas => {
             const link = document.createElement('a');
             link.download = `ตารางผลประโยชน์รายปี-FWD-SSS.jpg`;
-            link.href = canvas.toDataURL('image/jpeg', 0.95);
+            link.href = canvas.toDataURL('image/jpeg', 1.0);
             link.click();
             btn.innerHTML = originalText;
             btn.disabled = false;
@@ -1157,29 +1187,18 @@
         btn.disabled = true;
 
         const target = document.getElementById("capture-area");
-        html2canvas(target, { scale: 2, backgroundColor: "#ffffff" }).then(canvas => {
-            const imgData = canvas.toDataURL('image/jpeg', 0.95);
+        // อัพเกรดเป็น scale: 3 และตั้งคุณภาพ max
+        html2canvas(target, { scale: 3, useCORS: true, backgroundColor: "#ffffff" }).then(canvas => {
+            const imgData = canvas.toDataURL('image/jpeg', 1.0);
             const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF('p', 'mm', 'a4'); // Portrait A4
+            const pdf = new jsPDF('p', 'mm', 'a4'); // กระดาษ A4 แนวตั้ง
             
-            const pdfWidth = 210; // A4 แนวตั้งกว้าง 210mm
-            const pdfHeight = 297; // A4 แนวตั้งสูง 297mm
-            const margin = 10;
-            const maxWidth = pdfWidth - (margin * 2);
-            const maxHeight = pdfHeight - (margin * 2);
+            const pdfWidth = 210; // กว้างมาตรฐาน A4 (mm)
+            // คำนวณความสูงตามสัดส่วนภาพจริง เพื่อให้พอดีกับกระดาษ A4 แบบไร้ขอบขาวที่ผิดเพี้ยน
+            const imgRatio = canvas.height / canvas.width;
+            let finalHeight = pdfWidth * imgRatio;
             
-            let imgWidth = maxWidth;
-            let imgHeight = (canvas.height * imgWidth) / canvas.width;
-            
-            if (imgHeight > maxHeight) {
-                imgHeight = maxHeight;
-                imgWidth = (canvas.width * imgHeight) / canvas.height;
-            }
-            
-            const xOffset = (pdfWidth - imgWidth) / 2;
-            const yOffset = (pdfHeight - imgHeight) / 2;
-            
-            pdf.addImage(imgData, 'JPEG', xOffset, yOffset, imgWidth, imgHeight);
+            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, finalHeight);
             pdf.save(`ตารางผลประโยชน์รายปี-FWD-SSS.pdf`);
             
             btn.innerHTML = originalText;
