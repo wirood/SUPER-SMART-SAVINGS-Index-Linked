@@ -159,13 +159,23 @@
     }
     .projection-title { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
     .projection-title i { color: var(--gold); }
-    .proj-table-wrapper { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border-color); pointer-events: none; /* Make table non-clickable individually */ }
-    .proj-table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: center; min-width: 700px; }
-    .proj-table th { background: linear-gradient(135deg, #1a1e29, #2c3245); color: white; padding: 12px 10px; font-weight: 600; border-bottom: 3px solid var(--gold); white-space: nowrap; border-right: 1px solid rgba(255,255,255,0.1);}
-    .proj-table td { padding: 12px 10px; border-bottom: 1px solid var(--border-color); color: var(--text-dark); border-right: 1px solid var(--border-color);}
+    
+    .proj-table-wrapper { 
+        overflow-x: auto; 
+        border-radius: 12px; 
+        border: 1px solid var(--border-color); 
+        -webkit-overflow-scrolling: touch; 
+    }
+    
+    /* ปรับแต่งความกว้างและขนาดตารางให้ฟิตพอดี */
+    .proj-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: center; table-layout: auto; }
+    .proj-table th { background: linear-gradient(135deg, #1a1e29, #2c3245); color: white; padding: 10px 5px; font-weight: 600; border-bottom: 3px solid var(--gold); border-right: 1px solid rgba(255,255,255,0.1); line-height: 1.4;}
+    .proj-table td { padding: 10px 5px; border-bottom: 1px solid var(--border-color); color: var(--text-dark); border-right: 1px solid var(--border-color);}
+    
     .proj-table tr:last-child td { border-bottom: none; }
     .proj-table tr:nth-child(even) { background-color: #f8fafc; }
     .td-highlight { font-weight: 700; color: #b45309; }
+    .td-custom { font-weight: 700; color: #0284c7; background-color: #f0f9ff; }
     .td-guarantee { font-weight: 600; color: var(--primary); }
     .td-acc { color: var(--navy); font-weight: 600; background: #f1f5f9; }
     .proj-footer { font-size: 12px; color: var(--text-grey); margin-top: 15px; line-height: 1.5; background: #fffcf5; padding: 10px; border-radius: 8px; border: 1px dashed #fde68a; }
@@ -241,10 +251,37 @@
     .agent-details-main .license { font-size: 12px; color: var(--text-grey); margin: 4px 0 10px; }
     .btn-call { display: inline-flex; align-items: center; gap: 8px; background: var(--primary); color: white; padding: 6px 15px; border-radius: 20px; text-decoration: none; font-size: 13px; font-weight: 700; }
 
-    /* Sticky Bar */
+    /* Sticky Bar & Floating Button */
     .sticky-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: white; box-shadow: 0 -5px 20px rgba(0,0,0,0.08); padding: 15px 0; z-index: 900; border-top: 3px solid var(--primary); }
     .sticky-content { max-width: 1200px; margin: auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
-    .btn-line { background: #06C755; color: white; padding: 12px 25px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 16px; display: flex; align-items: center; gap: 8px; border: none; }
+    .btn-line { background: #06C755; color: white; padding: 12px 25px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 16px; display: flex; align-items: center; gap: 8px; border: none; transition: 0.3s; }
+    .btn-line:hover { background: #05a044; transform: translateY(-2px); }
+    
+    .dl-brochure-tab {
+        position: fixed;
+        bottom: 95px;
+        right: 20px;
+        background: linear-gradient(135deg, #1e3a8a, var(--navy));
+        color: white;
+        padding: 12px 25px;
+        border-radius: 30px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 15px;
+        box-shadow: 0 5px 20px rgba(11, 43, 70, 0.3);
+        z-index: 890;
+        transition: 0.3s;
+        border: 2px solid white;
+    }
+    .dl-brochure-tab:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 8px 25px rgba(11, 43, 70, 0.4);
+        background: linear-gradient(135deg, var(--primary), #c2410c);
+    }
+    .dl-brochure-tab i { font-size: 20px; color: #fde047; }
 
     /* =========================================
        REPORT OVERLAY STYLES 
@@ -273,7 +310,7 @@
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
         }
-        #main-content, .sticky-bar, .action-buttons, .close-report-btn { display: none !important; }
+        #main-content, .sticky-bar, .action-buttons, .close-report-btn, .dl-brochure-tab { display: none !important; }
         body { background: white; padding: 0; margin: 0;}
         #report-overlay { position: static; display: block !important; background: white !important; padding: 0; }
         #capture-area { box-shadow: none !important; margin: 0 auto !important; width: 100% !important; max-width: 100% !important; }
@@ -294,6 +331,9 @@
         .official-link-box a { width: 100%; justify-content: center; }
         .projection-card::after { top: -15px; right: 50%; transform: translateX(50%); white-space: nowrap;}
         #report-overlay { padding: 10px; }
+        .footer-flex-container { flex-direction: column; }
+        .dl-brochure-tab { bottom: 85px; right: 15px; padding: 10px 18px; font-size: 13px; }
+        .dl-brochure-tab i { font-size: 18px; }
     }
 </style>
 </head>
@@ -492,13 +532,14 @@
                             <tr>
                                 <th rowspan="2">สิ้นปีกรมธรรม์ที่</th>
                                 <th rowspan="2">เบี้ยประกันสะสม</th>
-                                <th rowspan="2">เงินคืนรับรองการจ่าย</th>
-                                <th colspan="3" style="border-bottom: 1px solid rgba(255,255,255,0.2);">ประมาณการผลประโยชน์ที่ไม่รับรองการจ่าย (โอกาสรับโบนัส)</th>
+                                <th rowspan="2">เงินคืนรับรอง<br>การจ่าย</th>
+                                <th colspan="4" style="border-bottom: 1px solid rgba(255,255,255,0.2);">ประมาณการผลประโยชน์ที่ไม่รับรองการจ่าย (โอกาสรับโบนัส)</th>
                             </tr>
                             <tr>
-                                <th>กรณีดัชนีเติบโต 2% ต่อปี</th>
-                                <th>กรณีดัชนีเติบโต 4% ต่อปี</th>
-                                <th style="color: var(--gold);">กรณีดัชนีเติบโต 6% ต่อปี</th>
+                                <th>กรณีดัชนีเติบโต<br>2% ต่อปี</th>
+                                <th>กรณีดัชนีเติบโต<br>4% ต่อปี</th>
+                                <th style="color: var(--gold);">กรณีดัชนีเติบโต<br>6% ต่อปี</th>
+                                <th style="color: #60a5fa;">กำหนดเอง<br><span id="th-custom-rate">7.5</span>% ต่อปี</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -508,15 +549,17 @@
                                 <td class="td-guarantee">-</td>
                                 <td class="td-highlight" id="proj-y1-2">770,492</td>
                                 <td class="td-highlight" id="proj-y1-4">1,784,005</td>
-                                <td class="td-highlight" style="font-size: 16px;" id="proj-y1-6">3,110,927</td>
+                                <td class="td-highlight" style="font-size: 15px;" id="proj-y1-6">3,110,927</td>
+                                <td class="td-custom" style="font-size: 15px;" id="proj-y1-custom">0</td>
                             </tr>
                             <tr>
-                                <td><strong>รวมเงินคืนรายปี (ปีที่ 1-24)</strong></td>
+                                <td><strong>รวมเงินคืนรายปี<br>(ปีที่ 1-24)</strong></td>
                                 <td class="td-acc">-</td>
                                 <td class="td-guarantee" id="proj-cb-total-table">72,000</td>
                                 <td class="td-highlight">-</td>
                                 <td class="td-highlight">-</td>
                                 <td class="td-highlight">-</td>
+                                <td class="td-custom">-</td>
                             </tr>
                             <tr>
                                 <td><strong>ปีที่ 25</strong></td>
@@ -524,23 +567,26 @@
                                 <td class="td-guarantee" id="proj-guarantee-mat">4,440,000</td>
                                 <td class="td-highlight" id="proj-y2-2">1,426,937</td>
                                 <td class="td-highlight" id="proj-y2-4">3,710,570</td>
-                                <td class="td-highlight" style="font-size: 16px;" id="proj-y2-6">7,332,707</td>
+                                <td class="td-highlight" style="font-size: 15px;" id="proj-y2-6">7,332,707</td>
+                                <td class="td-custom" style="font-size: 15px;" id="proj-y2-custom">0</td>
                             </tr>
                             <tr style="background-color: #f1f5f9;">
-                                <td><strong>รวมผลประโยชน์ไม่รับรอง</strong></td>
+                                <td><strong>รวมผล<br>ประโยชน์ไม่รับรอง</strong></td>
                                 <td class="td-acc">-</td>
                                 <td class="td-guarantee">-</td>
-                                <td class="td-highlight" style="font-size: 15px;" id="proj-ng-tot-2">2,197,429</td>
-                                <td class="td-highlight" style="font-size: 15px;" id="proj-ng-tot-4">5,494,575</td>
-                                <td class="td-highlight" style="font-size: 16px; color: #c2410c;" id="proj-ng-tot-6">10,443,634</td>
+                                <td class="td-highlight" id="proj-ng-tot-2">2,197,429</td>
+                                <td class="td-highlight" id="proj-ng-tot-4">5,494,575</td>
+                                <td class="td-highlight" style="font-size: 15px; color: #c2410c;" id="proj-ng-tot-6">10,443,634</td>
+                                <td class="td-custom" style="font-size: 15px; color: #0369a1;" id="proj-ng-tot-custom">0</td>
                             </tr>
                             <tr style="background-color: #fff2e8; border-top: 2px solid var(--primary);">
-                                <td><strong>รวมรับผลประโยชน์ทั้งหมด</strong></td>
+                                <td><strong>รวมรับผล<br>ประโยชน์ทั้งหมด</strong></td>
                                 <td class="td-acc">-</td>
-                                <td class="td-guarantee" style="font-size: 16px;" id="proj-guarantee-total">4,512,000</td>
-                                <td class="td-highlight" style="font-size: 16px;" id="proj-tot-2">6,709,429</td>
-                                <td class="td-highlight" style="font-size: 16px;" id="proj-tot-4">10,006,575</td>
-                                <td class="td-highlight" style="font-size: 18px; color: #c2410c;" id="proj-tot-6">14,955,634</td>
+                                <td class="td-guarantee" style="font-size: 15px;" id="proj-guarantee-total">4,512,000</td>
+                                <td class="td-highlight" style="font-size: 15px;" id="proj-tot-2">6,709,429</td>
+                                <td class="td-highlight" style="font-size: 15px;" id="proj-tot-4">10,006,575</td>
+                                <td class="td-highlight" style="font-size: 16px; color: #c2410c;" id="proj-tot-6">14,955,634</td>
+                                <td class="td-custom" style="font-size: 16px; color: #0369a1;" id="proj-tot-custom">0</td>
                             </tr>
                         </tbody>
                     </table>
@@ -556,32 +602,9 @@
                 <div class="sim-content" id="sim-content">
                     <div style="margin-bottom: 15px; font-weight: 600; color: var(--navy); display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                         สมมุติระดับดัชนีเติบโตเฉลี่ย 
-                        <input type="number" id="custom-rate" value="5" step="0.5" oninput="updateCustomCalc()" style="width: 90px; font-size: 18px; padding: 5px; text-align: center; border: 2px solid var(--primary); border-radius: 8px; color: var(--primary); font-weight: bold; outline:none;"> % ต่อปี
+                        <input type="number" id="custom-rate" value="7.5" step="0.5" oninput="calculate()" style="width: 90px; font-size: 18px; padding: 5px; text-align: center; border: 2px solid var(--primary); border-radius: 8px; color: var(--primary); font-weight: bold; outline:none;"> % ต่อปี
                     </div>
                     
-                    <table class="proj-table" style="min-width: 100%;">
-                        <thead>
-                            <tr>
-                                <th>สิ้นปีกรมธรรม์ที่</th>
-                                <th>ผลประโยชน์ที่ไม่รับรองการจ่าย (บาท)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>ปีที่ <span class="txt-bonus-year-sim">15</span></td>
-                                <td class="td-highlight" id="custom-res-1" style="font-size: 16px;">0</td>
-                            </tr>
-                            <tr>
-                                <td>ปีที่ 25</td>
-                                <td class="td-highlight" id="custom-res-2" style="font-size: 16px;">0</td>
-                            </tr>
-                            <tr style="background-color: #fff2e8; border-top: 2px solid var(--primary);">
-                                <td><strong>รวมรับผลประโยชน์ทั้งหมดตลอดสัญญา</strong><br><span style="font-size: 11px;">(รวมเงินการันตี <span id="custom-res-guarantee">0</span> บ.)</span></td>
-                                <td class="td-highlight" style="font-size: 20px; color: #c2410c;" id="custom-res-total">0</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
                     <div style="margin-top: 25px; font-size: 15px; color: var(--navy); font-weight: 700;">
                         <i class="fa-solid fa-magnifying-glass-chart"></i> ตัวอย่างสูตรการคำนวณอ้างอิงจากเอกสาร
                     </div>
@@ -597,7 +620,7 @@
                         </div>
                         <div style="font-size: 12px; color: var(--text-grey); margin-top: 12px; line-height: 1.5;">
                             * <span class="fml-prem">0</span> คือ เบี้ยประกันภัยรวมตลอดสัญญา (ไม่รวมสัญญาเพิ่มเติม)<br>
-                            * ตัวเลขดัชนี <span id="fml-idx1-info">0</span> และ <span id="fml-idx2-info">0</span> คำนวณจำลองจากอัตราเติบโต <span id="fml-rate-info">5</span>% ต่อปี ตามสูตร (1 + r)^t<br>
+                            * ตัวเลขดัชนี <span id="fml-idx1-info">0</span> และ <span id="fml-idx2-info">0</span> คำนวณจำลองจากอัตราเติบโต <span id="fml-rate-info">7.5</span>% ต่อปี ตามสูตร (1 + r)^t<br>
                             * สมมุติอัตราแลกเปลี่ยนคงที่ (FX = 1)
                         </div>
                     </div>
@@ -634,6 +657,11 @@
     </div>
 </div>
 
+<!-- Floating Brochure Button -->
+<a href="https://www.fwd.co.th/files/v3/assets/blt331c1aa12dcfd37a/bltfe3e69faf28c6d2d/6ac46a60e7a20e8bd934b5d8/TH_Brochure_SUPER_SMART_SAVINGS_(Index_Linked)_20261006.pdf" target="_blank" class="dl-brochure-tab" id="dl-brochure-btn">
+    <i class="fa-solid fa-file-pdf"></i> ดาวน์โหลดโบรชัวร์
+</a>
+
 <!-- ================= REPORT OVERLAY ================= -->
 <div id="report-overlay"></div>
 
@@ -642,6 +670,7 @@
     let currentAge = 40;
     let sumInsured = 300000;
     
+    // คืนค่า Multipliers ทั้งหมดกลับมาเพื่อให้ช่อง 6% ใช้งานได้ปกติ
     const PROJ_MULT = {
         '15': { yr1: [0.17295, 0.40045, 0.69830], yr2: [0.32030, 0.83290, 1.64595] },
         '7': { yr1: [0.07435, 0.15795, 0.25180], yr2: [0.32030, 0.83290, 1.64595] }
@@ -683,44 +712,7 @@
         } else {
             content.style.display = 'block';
             icon.classList.replace('fa-chevron-down', 'fa-chevron-up');
-            updateCustomCalc();
         }
-    }
-
-    function updateCustomCalc() {
-        let customRate = parseFloat(document.getElementById('custom-rate').value) || 0;
-        let baseRate = 1000;
-        let discountPer1000 = (sumInsured >= 500000) ? 20 : ((sumInsured >= 200000) ? 10 : 0);
-        let annualPremium = (sumInsured / 1000) * (baseRate - discountPer1000);
-        let totalPremium = annualPremium * parseInt(currentPlan);
-
-        let t1 = parseInt(currentPlan); let t2 = 25;
-        let idx1_raw = Math.pow(1 + customRate/100, t1);
-        let idx2_raw = Math.pow(1 + customRate/100, t2);
-
-        let benefit1 = (idx1_raw > 1) ? (0.5 * totalPremium * 1.0 * (idx1_raw - 1)) : 0;
-        let benefit2 = (idx2_raw > 1) ? (0.5 * totalPremium * 1.0 * (idx2_raw - 1)) : 0;
-
-        let cbTotal = (sumInsured * 0.01) * 24;
-        let matBenefit = sumInsured * (currentPlan === '7' ? 7 : 14.8);
-        let totalGuaranteed = cbTotal + matBenefit;
-        let grandTotal = totalGuaranteed + benefit1 + benefit2;
-
-        document.getElementById('custom-res-1').innerText = formatNum(Math.round(benefit1));
-        document.getElementById('custom-res-2').innerText = formatNum(Math.round(benefit2));
-        document.getElementById('custom-res-total').innerText = formatNum(Math.round(grandTotal));
-        document.getElementById('custom-res-guarantee').innerText = formatNum(Math.round(totalGuaranteed));
-
-        let premTexts = document.getElementsByClassName('fml-prem');
-        for (let i=0; i<premTexts.length; i++) { premTexts[i].innerText = formatNum(totalPremium); }
-        
-        document.getElementById('fml-idx1').innerText = (idx1_raw * 100).toFixed(2);
-        document.getElementById('fml-idx2').innerText = (idx2_raw * 100).toFixed(2);
-        document.getElementById('fml-idx1-info').innerText = (idx1_raw * 100).toFixed(2);
-        document.getElementById('fml-idx2-info').innerText = (idx2_raw * 100).toFixed(2);
-        document.getElementById('fml-rate-info').innerText = customRate;
-        document.getElementById('fml-res1').innerText = formatNum(Math.round(benefit1));
-        document.getElementById('fml-res2').innerText = formatNum(Math.round(benefit2));
     }
 
     function calculate() {
@@ -763,6 +755,7 @@
         let m_y1 = PROJ_MULT[currentPlan].yr1;
         let m_y2 = PROJ_MULT[currentPlan].yr2;
 
+        // คำนวณคอลัมน์ 2%, 4%, 6% แบบคงที่เหมือนเดิม
         let proj_y1_2 = Math.round(totalPremium * m_y1[0]);
         let proj_y1_4 = Math.round(totalPremium * m_y1[1]);
         let proj_y1_6 = Math.round(totalPremium * m_y1[2]);
@@ -778,6 +771,19 @@
         let grand_tot_2 = totalGuaranteed + ng_tot_2;
         let grand_tot_4 = totalGuaranteed + ng_tot_4;
         let grand_tot_6 = totalGuaranteed + ng_tot_6;
+
+        // คำนวณคอลัมน์ที่ 4 ตามเปอร์เซ็นต์แบบกำหนดเอง (Dynamic)
+        let customRate = parseFloat(document.getElementById('custom-rate').value) || 0;
+        let t1 = parseInt(currentPlan); 
+        let t2 = 25;
+        let idx1_raw = Math.pow(1 + customRate/100, t1);
+        let idx2_raw = Math.pow(1 + customRate/100, t2);
+
+        let proj_y1_custom = Math.round((idx1_raw > 1) ? (0.5 * totalPremium * (idx1_raw - 1)) : 0);
+        let proj_y2_custom = Math.round((idx2_raw > 1) ? (0.5 * totalPremium * (idx2_raw - 1)) : 0);
+
+        let ng_tot_custom = proj_y1_custom + proj_y2_custom;
+        let grand_tot_custom = totalGuaranteed + ng_tot_custom;
 
         // UI Updates
         document.getElementById('pres-plan-name').innerText = `25/${currentPlan}`;
@@ -800,9 +806,13 @@
         document.getElementById('proj-yr-label').innerText = `ปีที่ ${currentPlan}`;
         document.getElementById('proj-info-text').innerText = `สำหรับแผน 25/${currentPlan} ทุนประกันภัย ${formatNum(sumInsured)} บาท (เบี้ยประกันภัยรวมตลอดสัญญา ${formatNum(totalPremium)} บาท)`;
         
+        // อัปเดตตัวเลขเปอร์เซ็นต์บนหัวตารางสำหรับช่องกำหนดเอง
+        document.getElementById('th-custom-rate').innerText = customRate;
+
         document.getElementById('proj-acc-prem-15').innerText = formatNum(totalPremium);
         document.getElementById('proj-acc-prem-25').innerText = formatNum(totalPremium);
 
+        // นำค่าคงที่กลับมาแสดง
         document.getElementById('proj-y1-2').innerText = formatNum(proj_y1_2);
         document.getElementById('proj-y1-4').innerText = formatNum(proj_y1_4);
         document.getElementById('proj-y1-6').innerText = formatNum(proj_y1_6);
@@ -818,15 +828,29 @@
         document.getElementById('proj-tot-4').innerText = formatNum(grand_tot_4);
         document.getElementById('proj-tot-6').innerText = formatNum(grand_tot_6);
         
+        // แสดงค่าตัวแปรกำหนดเอง
+        document.getElementById('proj-y1-custom').innerText = formatNum(proj_y1_custom);
+        document.getElementById('proj-y2-custom').innerText = formatNum(proj_y2_custom);
+        document.getElementById('proj-ng-tot-custom').innerText = formatNum(ng_tot_custom);
+        document.getElementById('proj-tot-custom').innerText = formatNum(grand_tot_custom);
+
         document.getElementById('proj-guarantee-total').innerText = formatNum(totalGuaranteed);
         document.getElementById('proj-guarantee-mat').innerText = formatNum(matBenefit);
-        
-        // Populate the added column for cash back total
         document.getElementById('proj-cb-total-table').innerText = formatNum(cbTotal);
 
         document.getElementById('fwd-official-link').href = currentPlan === '15' ? "https://www.fwd.co.th/th/index/ms-ma-8v050d-e86a/" : "https://www.fwd.co.th/th/index/ms-ma-8v050d-e87a/";
 
-        if (document.getElementById('sim-content').style.display === 'block') { updateCustomCalc(); }
+        // อัปเดตสูตรคำนวณด้านล่าง
+        let premTexts = document.getElementsByClassName('fml-prem');
+        for (let i=0; i<premTexts.length; i++) { premTexts[i].innerText = formatNum(totalPremium); }
+        
+        document.getElementById('fml-idx1').innerText = (idx1_raw * 100).toFixed(2);
+        document.getElementById('fml-idx2').innerText = (idx2_raw * 100).toFixed(2);
+        document.getElementById('fml-idx1-info').innerText = (idx1_raw * 100).toFixed(2);
+        document.getElementById('fml-idx2-info').innerText = (idx2_raw * 100).toFixed(2);
+        document.getElementById('fml-rate-info').innerText = customRate;
+        document.getElementById('fml-res1').innerText = formatNum(proj_y1_custom);
+        document.getElementById('fml-res2').innerText = formatNum(proj_y2_custom);
     }
 
     function sendToLineOA() {
@@ -847,20 +871,29 @@
         const plan = `25/${currentPlan}`;
         const sa = document.getElementById('dash-sa').innerText;
         const totalPrem = document.getElementById('display-total-premium').innerText;
+        const customRate = document.getElementById('custom-rate').value || '7.5';
 
         // Fetching table values dynamically
         const y1_2 = document.getElementById('proj-y1-2').innerText;
         const y1_4 = document.getElementById('proj-y1-4').innerText;
         const y1_6 = document.getElementById('proj-y1-6').innerText;
+        const y1_custom = document.getElementById('proj-y1-custom').innerText;
+        
         const y2_2 = document.getElementById('proj-y2-2').innerText;
         const y2_4 = document.getElementById('proj-y2-4').innerText;
         const y2_6 = document.getElementById('proj-y2-6').innerText;
+        const y2_custom = document.getElementById('proj-y2-custom').innerText;
+        
         const ng_tot_2 = document.getElementById('proj-ng-tot-2').innerText;
         const ng_tot_4 = document.getElementById('proj-ng-tot-4').innerText;
         const ng_tot_6 = document.getElementById('proj-ng-tot-6').innerText;
+        const ng_tot_custom = document.getElementById('proj-ng-tot-custom').innerText;
+        
         const tot_2 = document.getElementById('proj-tot-2').innerText;
         const tot_4 = document.getElementById('proj-tot-4').innerText;
         const tot_6 = document.getElementById('proj-tot-6').innerText;
+        const tot_custom = document.getElementById('proj-tot-custom').innerText;
+        
         const guar_mat = document.getElementById('proj-guarantee-mat').innerText;
         const guar_tot = document.getElementById('proj-guarantee-total').innerText;
         const cb_tot = document.getElementById('proj-cb-total-table').innerText;
@@ -887,13 +920,14 @@
                             <tr>
                                 <th rowspan="2">สิ้นปีกรมธรรม์ที่</th>
                                 <th rowspan="2">เบี้ยประกันสะสม</th>
-                                <th rowspan="2">เงินคืนรับรองการจ่าย</th>
-                                <th colspan="3" style="border-bottom: 1px solid rgba(255,255,255,0.2);">ประมาณการผลประโยชน์ที่ไม่รับรองการจ่าย (โอกาสรับโบนัส)</th>
+                                <th rowspan="2">เงินคืนรับรอง<br>การจ่าย</th>
+                                <th colspan="4" style="border-bottom: 1px solid rgba(255,255,255,0.2);">ประมาณการผลประโยชน์ที่ไม่รับรองการจ่าย (โอกาสรับโบนัส)</th>
                             </tr>
                             <tr>
-                                <th>กรณีดัชนีเติบโต 2% ต่อปี</th>
-                                <th>กรณีดัชนีเติบโต 4% ต่อปี</th>
-                                <th style="color: var(--gold);">กรณีดัชนีเติบโต 6% ต่อปี</th>
+                                <th>กรณีดัชนีเติบโต<br>2% ต่อปี</th>
+                                <th>กรณีดัชนีเติบโต<br>4% ต่อปี</th>
+                                <th style="color: var(--gold);">กรณีดัชนีเติบโต<br>6% ต่อปี</th>
+                                <th style="color: #60a5fa;">กำหนดเอง<br>${customRate}% ต่อปี</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -903,15 +937,17 @@
                                 <td class="td-guarantee">-</td>
                                 <td class="td-highlight">${y1_2}</td>
                                 <td class="td-highlight">${y1_4}</td>
-                                <td class="td-highlight" style="font-size: 16px;">${y1_6}</td>
+                                <td class="td-highlight" style="font-size: 15px;">${y1_6}</td>
+                                <td class="td-custom" style="font-size: 15px;">${y1_custom}</td>
                             </tr>
                             <tr>
-                                <td><strong>รวมเงินคืนรายปี (ปีที่ 1-24)</strong></td>
+                                <td><strong>รวมเงินคืนรายปี<br>(ปีที่ 1-24)</strong></td>
                                 <td class="td-acc">-</td>
                                 <td class="td-guarantee">${cb_tot}</td>
                                 <td class="td-highlight">-</td>
                                 <td class="td-highlight">-</td>
                                 <td class="td-highlight">-</td>
+                                <td class="td-custom">-</td>
                             </tr>
                             <tr>
                                 <td><strong>ปีที่ 25</strong></td>
@@ -919,41 +955,45 @@
                                 <td class="td-guarantee">${guar_mat}</td>
                                 <td class="td-highlight">${y2_2}</td>
                                 <td class="td-highlight">${y2_4}</td>
-                                <td class="td-highlight" style="font-size: 16px;">${y2_6}</td>
+                                <td class="td-highlight" style="font-size: 15px;">${y2_6}</td>
+                                <td class="td-custom" style="font-size: 15px;">${y2_custom}</td>
                             </tr>
                             <tr style="background-color: #f1f5f9;">
-                                <td><strong>รวมผลประโยชน์ไม่รับรอง</strong></td>
+                                <td><strong>รวมผล<br>ประโยชน์ไม่รับรอง</strong></td>
                                 <td class="td-acc">-</td>
                                 <td class="td-guarantee">-</td>
-                                <td class="td-highlight" style="font-size: 15px;">${ng_tot_2}</td>
-                                <td class="td-highlight" style="font-size: 15px;">${ng_tot_4}</td>
-                                <td class="td-highlight" style="font-size: 16px; color: #c2410c;">${ng_tot_6}</td>
+                                <td class="td-highlight" style="font-size: 14px;">${ng_tot_2}</td>
+                                <td class="td-highlight" style="font-size: 14px;">${ng_tot_4}</td>
+                                <td class="td-highlight" style="font-size: 15px; color: #c2410c;">${ng_tot_6}</td>
+                                <td class="td-custom" style="font-size: 15px; color: #0369a1;">${ng_tot_custom}</td>
                             </tr>
                             <tr style="background-color: #fff2e8; border-top: 2px solid var(--primary);">
-                                <td><strong>รวมรับผลประโยชน์ทั้งหมด</strong></td>
+                                <td><strong>รวมรับผล<br>ประโยชน์ทั้งหมด</strong></td>
                                 <td class="td-acc">-</td>
-                                <td class="td-guarantee" style="font-size: 16px;">${guar_tot}</td>
-                                <td class="td-highlight" style="font-size: 16px;">${tot_2}</td>
-                                <td class="td-highlight" style="font-size: 16px;">${tot_4}</td>
-                                <td class="td-highlight" style="font-size: 18px; color: #c2410c;">${tot_6}</td>
+                                <td class="td-guarantee" style="font-size: 15px;">${guar_tot}</td>
+                                <td class="td-highlight" style="font-size: 15px;">${tot_2}</td>
+                                <td class="td-highlight" style="font-size: 15px;">${tot_4}</td>
+                                <td class="td-highlight" style="font-size: 16px; color: #c2410c;">${tot_6}</td>
+                                <td class="td-custom" style="font-size: 16px; color: #0369a1;">${tot_custom}</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
-                <div style="font-size: 12px; color: var(--text-grey); margin-top: 15px; line-height: 1.5; background: #fffcf5; padding: 15px; border-radius: 8px; border: 1px dashed #fde68a;">
-                    <strong>หมายเหตุสำคัญ:</strong><br>
-                    * ตัวเลขนี้เป็นเพียงการแสดงตัวอย่างการคำนวณที่ Participation Rate (PR) 100% ตามทุนประกันภัยที่เลือกเท่านั้น ไม่ใช่การการันตีผลประโยชน์ที่จะได้รับจริง<br>
-                    * ผลประโยชน์ที่ไม่รับรองการจ่ายอ้างอิงผลตอบแทนจากดัชนี Morgan Stanley Multi-Asset Realtime Index 8% VT with 0.5% Decrement<br>
-                    * หากในกรณีที่แย่ที่สุด ดัชนีอ้างอิงติดลบหรือไม่มีผลตอบแทน ผลประโยชน์ที่ไม่รับรองการจ่ายจะมีค่าไม่ต่ำกว่าศูนย์ (การันตีเงินต้นไม่สูญหาย)
-                </div>
+                <div class="footer-flex-container" style="display: flex; gap: 20px; align-items: stretch; margin-top: 15px;">
+                    <div style="flex: 1; font-size: 10px; color: var(--text-grey); line-height: 1.3; background: #fffcf5; padding: 12px 15px; border-radius: 8px; border: 1px dashed #fde68a;">
+                        <strong>หมายเหตุสำคัญ:</strong> * ตัวเลขนี้เป็นเพียงการแสดงตัวอย่างการคำนวณที่ Participation Rate (PR) 100% ตามทุนประกันภัยที่เลือกเท่านั้น ไม่ใช่การการันตีผลประโยชน์ที่จะได้รับจริง<br>
+                        * ผลประโยชน์ที่ไม่รับรองการจ่ายอ้างอิงผลตอบแทนจากดัชนี Morgan Stanley Multi-Asset Realtime Index 8% VT with 0.5% Decrement<br>
+                        * หากในกรณีที่แย่ที่สุด ดัชนีอ้างอิงติดลบหรือไม่มีผลตอบแทน ผลประโยชน์ที่ไม่รับรองการจ่ายจะมีค่าไม่ต่ำกว่าศูนย์ (การันตีเงินต้นไม่สูญหาย)
+                    </div>
 
-                <div style="margin-top: 30px; display: flex; align-items: center; gap: 15px; background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid var(--border-color);">
-                    <img src="agent.png" alt="ตัวแทน" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);" onerror="this.src='https://placehold.co/100x100/e86614/ffffff?text=Agent'">
-                    <div>
-                        <div style="font-weight: 700; color: var(--navy); font-size: 16px;">นฤมล คำใบ (ต๋อย)</div>
-                        <div style="font-size: 13px; color: var(--text-grey);">ผู้จัดการขาย | ใบอนุญาต 6901010926</div>
-                        <div style="font-size: 14px; font-weight: 600; color: var(--primary); margin-top: 3px;"><i class="fa-solid fa-phone"></i> โทร: 086-901-7235 &nbsp; <i class="fab fa-line" style="color:#06C755;"></i> Line: @toifwd</div>
+                    <div style="display: flex; align-items: center; gap: 15px; background: #f8fafc; padding: 10px 15px; border-radius: 12px; border: 1px solid var(--border-color); flex-shrink: 0;">
+                        <img src="agent.png" alt="ตัวแทน" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);" onerror="this.src='https://placehold.co/100x100/e86614/ffffff?text=Agent'">
+                        <div>
+                            <div style="font-weight: 700; color: var(--navy); font-size: 16px;">นฤมล คำใบ (ต๋อย)</div>
+                            <div style="font-size: 13px; color: var(--text-grey);">ผู้จัดการขาย | ใบอนุญาต 6901010926</div>
+                            <div style="font-size: 14px; font-weight: 600; color: var(--primary); margin-top: 3px;"><i class="fa-solid fa-phone"></i> โทร: 086-901-7235 &nbsp; <i class="fab fa-line" style="color:#06C755;"></i> Line: @toifwd</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -967,6 +1007,8 @@
 
         document.getElementById('main-content').style.display = 'none';
         document.querySelector('.sticky-bar').style.display = 'none';
+        document.getElementById('dl-brochure-btn').style.display = 'none';
+        
         const overlay = document.getElementById('report-overlay');
         overlay.innerHTML = htmlContent;
         overlay.style.display = 'block';
@@ -977,6 +1019,7 @@
         document.getElementById('report-overlay').style.display = 'none';
         document.getElementById('main-content').style.display = 'block';
         document.querySelector('.sticky-bar').style.display = 'block';
+        document.getElementById('dl-brochure-btn').style.display = 'flex';
         window.scrollTo(0,0);
     }
 
