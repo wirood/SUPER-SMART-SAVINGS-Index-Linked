@@ -974,7 +974,6 @@
 
         let tbodyHTML = "";
         
-        // ขยับลด Padding เพื่อความกระชับของตาราง (white-space: nowrap ป้องกันข้อความตกบรรทัด)
         for(let i = 1; i <= planInt; i++) {
             let isTarget = (i === planInt);
             let bgEmpty = isTarget ? '' : 'background-color: var(--gray-empty);';
@@ -1034,30 +1033,30 @@
         let irrCust = getIRR(currentPlan, annualPremium, cbYearly, matGuar, val_y1_cust, val_y2_cust);
 
         tbodyHTML += `
-        <tr style="font-weight: bold;">
+        <tr>
             <td style="border: none; background: white;"></td>
-            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 4px 2px; line-height:1.1;">รวมชำระเบี้ย<br><span style="font-size: 11px;">${formatNum(totalPremium)}</span></td>
-            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 4px 2px; line-height:1.1;">รวมรับเงินคืน<br><span style="font-size: 11px;">${formatNum(totalGuaranteed)}</span></td>
-            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 4px 2px; line-height:1.1;">+<br>ผลประโยชน์ไม่รับรอง<br><span style="font-size: 11px;">${formatNum(val_y1_2 + val_y2_2)}</span></td>
-            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 4px 2px; line-height:1.1;">+<br>ผลประโยชน์ไม่รับรอง<br><span style="font-size: 11px;">${formatNum(val_y1_4 + val_y2_4)}</span></td>
-            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 4px 2px; line-height:1.1;">+<br>ผลประโยชน์ไม่รับรอง<br><span style="font-size: 11px;">${formatNum(val_y1_6 + val_y2_6)}</span></td>
-            <td style="border: 1px solid white; background:${custCol}; color: white; padding: 4px 2px; line-height:1.1;">+<br>ผลประโยชน์ไม่รับรอง<br><span style="font-size: 11px;">${formatNum(val_y1_cust + val_y2_cust)}</span></td>
-            <td style="border: none; background: white;"></td>
-        </tr>
-        <tr style="font-weight: bold; background: #f8fafc;">
-            <td colspan="3" style="border: 1px solid #e2e8f0; padding: 4px; text-align: right; color: var(--text-dark);">รวมผลประโยชน์ ต่อ เบี้ยฯ รวม</td>
-            <td style="border: 1px solid #e2e8f0; padding: 4px; color: var(--text-dark);">${ratio2} เท่า</td>
-            <td style="border: 1px solid #e2e8f0; padding: 4px; color: var(--text-dark);">${ratio4} เท่า</td>
-            <td style="border: 1px solid #e2e8f0; padding: 4px; color: var(--text-dark);">${ratio6} เท่า</td>
-            <td style="border: 1px solid #e2e8f0; padding: 4px; color: #0284c7;">${ratioCust} เท่า</td>
+            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 5px 2px; line-height:1.3; font-weight:400;">รวมชำระเบี้ย<br><span style="font-size: 12px; font-weight:600;">${formatNum(totalPremium)}</span></td>
+            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 5px 2px; line-height:1.3; font-weight:400;">รวมรับเงินคืน<br><span style="font-size: 12px; font-weight:600;">${formatNum(totalGuaranteed)}</span></td>
+            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 5px 2px; line-height:1.3; font-weight:400;">+<br>ผลประโยชน์ไม่รับรอง<br><span style="font-size: 12px; font-weight:600;">${formatNum(val_y1_2 + val_y2_2)}</span></td>
+            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 5px 2px; line-height:1.3; font-weight:400;">+<br>ผลประโยชน์ไม่รับรอง<br><span style="font-size: 12px; font-weight:600;">${formatNum(val_y1_4 + val_y2_4)}</span></td>
+            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 5px 2px; line-height:1.3; font-weight:400;">+<br>ผลประโยชน์ไม่รับรอง<br><span style="font-size: 12px; font-weight:600;">${formatNum(val_y1_6 + val_y2_6)}</span></td>
+            <td style="border: 1px solid white; background:${custCol}; color: white; padding: 5px 2px; line-height:1.3; font-weight:400;">+<br>ผลประโยชน์ไม่รับรอง<br><span style="font-size: 12px; font-weight:600;">${formatNum(val_y1_cust + val_y2_cust)}</span></td>
             <td style="border: none; background: white;"></td>
         </tr>
-        <tr style="font-weight: bold;">
-            <td colspan="3" style="border: 1px solid white; background:${irrCol}; color: white; padding: 4px; text-align: right; font-size: 11px;">อัตราผลตอบแทนเฉลี่ยต่อปี (IRR)</td>
-            <td style="border: 1px solid white; background:${irrCol}; color: white; padding: 4px; font-size: 11px;">${irr2}%</td>
-            <td style="border: 1px solid white; background:${irrCol}; color: white; padding: 4px; font-size: 11px;">${irr4}%</td>
-            <td style="border: 1px solid white; background:${irrCol}; color: white; padding: 4px; font-size: 11px;">${irr6}%</td>
-            <td style="border: 1px solid white; background:${custCol}; color: white; padding: 4px; font-size: 11px;">${irrCust}%</td>
+        <tr style="background: #f8fafc;">
+            <td colspan="3" style="border: 1px solid #e2e8f0; padding: 5px; text-align: right; color: var(--text-dark); font-weight: 500;">รวมผลประโยชน์ ต่อ เบี้ยฯ รวม</td>
+            <td style="border: 1px solid #e2e8f0; padding: 5px; color: var(--text-dark); font-weight: 500;">${ratio2} เท่า</td>
+            <td style="border: 1px solid #e2e8f0; padding: 5px; color: var(--text-dark); font-weight: 500;">${ratio4} เท่า</td>
+            <td style="border: 1px solid #e2e8f0; padding: 5px; color: var(--text-dark); font-weight: 500;">${ratio6} เท่า</td>
+            <td style="border: 1px solid #e2e8f0; padding: 5px; color: #0284c7; font-weight: 500;">${ratioCust} เท่า</td>
+            <td style="border: none; background: white;"></td>
+        </tr>
+        <tr>
+            <td colspan="3" style="border: 1px solid white; background:${irrCol}; color: white; padding: 5px; text-align: right; font-size: 11px; font-weight: 400;">อัตราผลตอบแทนเฉลี่ยต่อปี (IRR)</td>
+            <td style="border: 1px solid white; background:${irrCol}; color: white; padding: 5px; font-size: 11px; font-weight: 400;">${irr2}%</td>
+            <td style="border: 1px solid white; background:${irrCol}; color: white; padding: 5px; font-size: 11px; font-weight: 400;">${irr4}%</td>
+            <td style="border: 1px solid white; background:${irrCol}; color: white; padding: 5px; font-size: 11px; font-weight: 400;">${irr6}%</td>
+            <td style="border: 1px solid white; background:${custCol}; color: white; padding: 5px; font-size: 11px; font-weight: 400;">${irrCust}%</td>
             <td style="border: none; background: white;"></td>
         </tr>
         `;
@@ -1068,10 +1067,13 @@
             <!-- Dashboard Screen Capture A4 Layout (794x1123) -->
             <div id="capture-area" style="width: 794px; height: 1123px; margin: 0 auto; background: white; box-sizing: border-box; display: flex; flex-direction: column; font-family: 'Prompt', sans-serif; position: relative; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.1);">
                 
-                <!-- Beautiful Header Banner (กระชับความสูง) -->
-                <div style="background: linear-gradient(135deg, #1a1e29, #2c3245); padding: 15px; color: white; text-align: center; border-bottom: 5px solid var(--primary);">
-                    <h1 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: 1px;">SUPER SMART SAVINGS <span style="color: var(--primary);">(Index Linked)</span></h1>
-                    <p style="margin: 2px 0 0 0; font-size: 12px; color: #cbd5e1;">โอกาสรับผลตอบแทนเพิ่ม ควบคู่การคุ้มครองชีวิตและการันตีเงินต้น</p>
+                <!-- Beautiful Header Banner (Rounded Box for text, Logo on the right) -->
+                <div style="padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-color); background: white;">
+                    <div style="background: linear-gradient(135deg, #1a1e29, #2c3245); padding: 12px 25px; border-radius: 12px; border-left: 6px solid var(--primary); display: inline-block;">
+                        <h1 style="margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 1px; color: white;">SUPER SMART SAVINGS <span style="color: var(--primary);">(Index Linked)</span></h1>
+                        <p style="margin: 2px 0 0 0; font-size: 12px; color: #cbd5e1;">โอกาสรับผลตอบแทนเพิ่ม ควบคู่การคุ้มครองชีวิตและการันตีเงินต้น</p>
+                    </div>
+                    <img src="logo.png" alt="FWD" style="height: 60px; max-width: 150px; object-fit: contain;">
                 </div>
 
                 <!-- Main Content Area -->
