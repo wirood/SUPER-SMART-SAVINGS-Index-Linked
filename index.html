@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<!-- เพิ่มไลบรารีสำหรับการบันทึกภาพและ PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
@@ -23,6 +22,9 @@
         --text-grey: #555555;
         --bg-color: #f4f6f8;
         --border-color: #e2e8f0;
+        --fwd-green: #154b42;
+        --fwd-orange: #e87c2b;
+        --gray-empty: #88929c;
     }
 
     body {
@@ -82,7 +84,6 @@
     
     .discount-alert { background: #dcfce7; color: #166534; padding: 10px; border-radius: 8px; font-size: 13px; margin-top: 15px; display: flex; align-items: center; gap: 8px; font-weight: 500; border: 1px solid #bbf7d0;}
 
-    /* Input text for sum insured */
     .sum-input-box {
         width: 120px; font-size: 18px; font-weight: 700; color: var(--primary); text-align: right; 
         border: 1px solid var(--border-color); border-radius: 8px; padding: 5px 10px; outline: none; 
@@ -91,15 +92,13 @@
     .sum-input-box:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
 
     /* --- Right Panel (Presentation) --- */
-    .right-panel { flex: 1; display: flex; flex-direction: column; gap: 20px; width: 100%; }
+    .right-panel { flex: 1; display: flex; flex-direction: column; gap: 20px; width: 100%; min-width: 0; }
     
-    /* Presentation Header */
     .pres-header { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 15px; border-bottom: 2px solid var(--border-color); }
     .pres-header h2 { margin: 0; font-size: 24px; color: var(--navy); }
     .pres-header .client-info { font-size: 16px; color: var(--text-grey); font-weight: 500; background: white; padding: 8px 20px; border-radius: 50px; border: 1px solid var(--border-color); box-shadow: 0 2px 10px rgba(0,0,0,0.02);}
     .client-info span { color: var(--primary); font-weight: 700; }
 
-    /* Key Features Grid */
     .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
     .feat-box { background: white; padding: 20px; border-radius: 16px; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: 0.3s; position: relative; overflow: hidden;}
     .feat-box:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-color: var(--primary-light);}
@@ -110,14 +109,12 @@
     .feat-box h3 { margin: 0 0 10px 0; font-size: 18px; color: var(--navy); }
     .feat-box p { margin: 0; font-size: 13px; color: var(--text-grey); line-height: 1.5; }
 
-    /* Morgan Stanley Section */
     .index-section { background: linear-gradient(to right, #1a1e29, #2c3245); border-radius: 16px; padding: 30px; color: white; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 10px 30px rgba(26, 30, 41, 0.3); }
     .index-content h3 { margin: 0 0 10px 0; font-size: 22px; color: var(--gold); }
     .index-content p { margin: 0; font-size: 14px; color: #cbd5e1; max-width: 400px; line-height: 1.6; }
     .index-logos { display: flex; gap: 20px; }
     .index-tag { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 10px 15px; border-radius: 8px; font-size: 14px; font-weight: 600; text-align: center; }
 
-    /* Benefit Dashboard */
     .benefit-dashboard { background: white; border-radius: 16px; padding: 25px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
     .dash-title { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;}
     
@@ -132,7 +129,6 @@
     .total-highlight { background: var(--primary-light); color: var(--primary); padding: 15px; border-radius: 10px; text-align: center; margin-top: 15px; border: 1px solid #fce4d6;}
     .total-highlight span { display: block; font-size: 28px; font-weight: 700; line-height: 1.2; color: #c2410c;}
 
-    /* Premium Summary Bar */
     .premium-summary { background: linear-gradient(135deg, white, #fffcf5); border: 2px solid var(--gold); border-radius: 16px; padding: 25px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 25px rgba(212, 175, 55, 0.15); margin-top: 10px;}
     .prem-text h3 { margin: 0; font-size: 20px; color: var(--navy); }
     .prem-text p { margin: 5px 0 0 0; color: var(--text-grey); font-size: 14px; }
@@ -141,20 +137,32 @@
     .prem-amount .unit { font-size: 16px; color: var(--text-grey); font-weight: 500; }
 
     /* Projection Table Styles */
-    .projection-card { background: #ffffff; border-radius: 16px; padding: 25px; border: 1px solid var(--primary); box-shadow: 0 10px 30px rgba(232,102,20,0.1); margin-top: 10px; cursor: pointer; transition: 0.3s; position: relative;}
+    .projection-card { 
+        background: #ffffff; 
+        border-radius: 16px; 
+        padding: 25px; 
+        border: 1px solid var(--primary); 
+        box-shadow: 0 10px 30px rgba(232,102,20,0.1); 
+        margin-top: 10px; 
+        cursor: pointer; 
+        transition: 0.3s; 
+        position: relative;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
     .projection-card:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(232,102,20,0.15); }
     .projection-card::after {
-        content: "\f0b2 ขยาย / บันทึกภาพตารางนี้";
-        font-family: "Font Awesome 6 Free";
-        font-weight: 900;
+        content: "\f0b2 ดูตารางผลประโยชน์แบบละเอียด (รายปี)";
+        font-family: "Prompt", "Font Awesome 6 Free";
+        font-weight: 600;
         position: absolute;
         top: 25px;
         right: 25px;
         background: var(--primary);
         color: white;
-        padding: 6px 15px;
+        padding: 8px 18px;
         border-radius: 20px;
-        font-size: 13px;
+        font-size: 14px;
         box-shadow: 0 4px 10px rgba(232,102,20,0.3);
     }
     .projection-title { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
@@ -165,10 +173,13 @@
         border-radius: 12px; 
         border: 1px solid var(--border-color); 
         -webkit-overflow-scrolling: touch; 
+        width: 100%;
+        display: block;
     }
     
-    /* ปรับแต่งความกว้างและขนาดตารางให้ฟิตพอดี */
     .proj-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: center; table-layout: auto; }
+    .proj-table.main-table { min-width: 750px; }
+    
     .proj-table th { background: linear-gradient(135deg, #1a1e29, #2c3245); color: white; padding: 10px 5px; font-weight: 600; border-bottom: 3px solid var(--gold); border-right: 1px solid rgba(255,255,255,0.1); line-height: 1.4;}
     .proj-table td { padding: 10px 5px; border-bottom: 1px solid var(--border-color); color: var(--text-dark); border-right: 1px solid var(--border-color);}
     
@@ -178,7 +189,6 @@
     .td-custom { font-weight: 700; color: #0284c7; background-color: #f0f9ff; }
     .td-guarantee { font-weight: 600; color: var(--primary); }
     .td-acc { color: var(--navy); font-weight: 600; background: #f1f5f9; }
-    .proj-footer { font-size: 12px; color: var(--text-grey); margin-top: 15px; line-height: 1.5; background: #fffcf5; padding: 10px; border-radius: 8px; border: 1px dashed #fde68a; }
 
     /* Custom Simulation Bar */
     .sim-bar {
@@ -314,7 +324,7 @@
         body { background: white; padding: 0; margin: 0;}
         #report-overlay { position: static; display: block !important; background: white !important; padding: 0; }
         #capture-area { box-shadow: none !important; margin: 0 auto !important; width: 100% !important; max-width: 100% !important; }
-        @page { size: landscape; margin: 10mm; }
+        @page { size: portrait; margin: 5mm; }
     }
 
     @media (max-width: 900px) {
@@ -329,7 +339,9 @@
         .prem-amount { text-align: center; }
         .official-link-box { flex-direction: column; gap: 15px; text-align: center; }
         .official-link-box a { width: 100%; justify-content: center; }
-        .projection-card::after { top: -15px; right: 50%; transform: translateX(50%); white-space: nowrap;}
+        
+        .projection-card { margin-top: 20px; padding: 15px; }
+        .projection-card::after { top: -12px; right: 50%; transform: translateX(50%); white-space: nowrap; font-size: 11px; padding: 4px 10px;}
         #report-overlay { padding: 10px; }
         .footer-flex-container { flex-direction: column; }
         .dl-brochure-tab { bottom: 85px; right: 15px; padding: 10px 18px; font-size: 13px; }
@@ -527,7 +539,7 @@
                 </div>
                 
                 <div class="proj-table-wrapper">
-                    <table class="proj-table">
+                    <table class="proj-table main-table">
                         <thead>
                             <tr>
                                 <th rowspan="2">สิ้นปีกรมธรรม์ที่</th>
@@ -539,7 +551,7 @@
                                 <th>กรณีดัชนีเติบโต<br>2% ต่อปี</th>
                                 <th>กรณีดัชนีเติบโต<br>4% ต่อปี</th>
                                 <th style="color: var(--gold);">กรณีดัชนีเติบโต<br>6% ต่อปี</th>
-                                <th style="color: #60a5fa;">กำหนดเอง<br><span id="th-custom-rate">7.5</span>% ต่อปี</th>
+                                <th style="color: #60a5fa;">สมมุติเอง<br><span id="th-custom-rate">7.5</span>% ต่อปี</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -666,11 +678,51 @@
 <div id="report-overlay"></div>
 
 <script>
+    // === IRR Calculation Function ===
+    function calcIRR(cashFlows) {
+        let guess = 0.05; // 5% guess
+        for (let i = 0; i < 100; i++) {
+            let npv = 0;
+            let npvDeriv = 0;
+            for (let j = 0; j < cashFlows.length; j++) {
+                npv += cashFlows[j] / Math.pow(1 + guess, j);
+                if (j > 0) npvDeriv -= j * cashFlows[j] / Math.pow(1 + guess, j + 1);
+            }
+            if (Math.abs(npvDeriv) < 1e-9) return guess; 
+            let newGuess = guess - npv / npvDeriv;
+            if (Math.abs(newGuess - guess) < 0.00001) return newGuess;
+            guess = newGuess;
+        }
+        return guess;
+    }
+
+    function getIRR(plan, annualPrem, cbYearly, matGuar, nonGuar1, nonGuar2) {
+        let t1 = parseInt(plan);
+        let cfs = [];
+        cfs.push(-annualPrem); 
+        for (let t = 1; t <= 25; t++) {
+            let cf = 0;
+            if (t < t1) {
+                cf = -annualPrem + cbYearly; 
+            } else if (t === t1) {
+                cf = cbYearly + nonGuar1; 
+            } else if (t < 25) {
+                cf = cbYearly; 
+            } else if (t === 25) {
+                cf = matGuar + nonGuar2; 
+            }
+            cfs.push(cf);
+        }
+        let irr = calcIRR(cfs);
+        if (isNaN(irr) || !isFinite(irr)) return "0.00";
+        return (irr * 100).toFixed(2);
+    }
+    // ================================
+
     let currentPlan = '15'; 
     let currentAge = 40;
     let sumInsured = 300000;
     
-    // คืนค่า Multipliers ทั้งหมดกลับมาเพื่อให้ช่อง 6% ใช้งานได้ปกติ
     const PROJ_MULT = {
         '15': { yr1: [0.17295, 0.40045, 0.69830], yr2: [0.32030, 0.83290, 1.64595] },
         '7': { yr1: [0.07435, 0.15795, 0.25180], yr2: [0.32030, 0.83290, 1.64595] }
@@ -755,7 +807,6 @@
         let m_y1 = PROJ_MULT[currentPlan].yr1;
         let m_y2 = PROJ_MULT[currentPlan].yr2;
 
-        // คำนวณคอลัมน์ 2%, 4%, 6% แบบคงที่เหมือนเดิม
         let proj_y1_2 = Math.round(totalPremium * m_y1[0]);
         let proj_y1_4 = Math.round(totalPremium * m_y1[1]);
         let proj_y1_6 = Math.round(totalPremium * m_y1[2]);
@@ -772,7 +823,6 @@
         let grand_tot_4 = totalGuaranteed + ng_tot_4;
         let grand_tot_6 = totalGuaranteed + ng_tot_6;
 
-        // คำนวณคอลัมน์ที่ 4 ตามเปอร์เซ็นต์แบบกำหนดเอง (Dynamic)
         let customRate = parseFloat(document.getElementById('custom-rate').value) || 0;
         let t1 = parseInt(currentPlan); 
         let t2 = 25;
@@ -806,13 +856,11 @@
         document.getElementById('proj-yr-label').innerText = `ปีที่ ${currentPlan}`;
         document.getElementById('proj-info-text').innerText = `สำหรับแผน 25/${currentPlan} ทุนประกันภัย ${formatNum(sumInsured)} บาท (เบี้ยประกันภัยรวมตลอดสัญญา ${formatNum(totalPremium)} บาท)`;
         
-        // อัปเดตตัวเลขเปอร์เซ็นต์บนหัวตารางสำหรับช่องกำหนดเอง
         document.getElementById('th-custom-rate').innerText = customRate;
 
         document.getElementById('proj-acc-prem-15').innerText = formatNum(totalPremium);
         document.getElementById('proj-acc-prem-25').innerText = formatNum(totalPremium);
 
-        // นำค่าคงที่กลับมาแสดง
         document.getElementById('proj-y1-2').innerText = formatNum(proj_y1_2);
         document.getElementById('proj-y1-4').innerText = formatNum(proj_y1_4);
         document.getElementById('proj-y1-6').innerText = formatNum(proj_y1_6);
@@ -828,7 +876,6 @@
         document.getElementById('proj-tot-4').innerText = formatNum(grand_tot_4);
         document.getElementById('proj-tot-6').innerText = formatNum(grand_tot_6);
         
-        // แสดงค่าตัวแปรกำหนดเอง
         document.getElementById('proj-y1-custom').innerText = formatNum(proj_y1_custom);
         document.getElementById('proj-y2-custom').innerText = formatNum(proj_y2_custom);
         document.getElementById('proj-ng-tot-custom').innerText = formatNum(ng_tot_custom);
@@ -840,7 +887,6 @@
 
         document.getElementById('fwd-official-link').href = currentPlan === '15' ? "https://www.fwd.co.th/th/index/ms-ma-8v050d-e86a/" : "https://www.fwd.co.th/th/index/ms-ma-8v050d-e87a/";
 
-        // อัปเดตสูตรคำนวณด้านล่าง
         let premTexts = document.getElementsByClassName('fml-prem');
         for (let i=0; i<premTexts.length; i++) { premTexts[i].innerText = formatNum(totalPremium); }
         
@@ -864,135 +910,195 @@
     }
 
     // ==========================================
-    // REPORT OVERLAY FUNCTIONS
+    // VERTICAL REPORT OVERLAY GENERATOR
     // ==========================================
     function openProjectionReport() {
-        const age = document.getElementById('age-input').value;
-        const plan = `25/${currentPlan}`;
-        const sa = document.getElementById('dash-sa').innerText;
-        const totalPrem = document.getElementById('display-total-premium').innerText;
-        const customRate = document.getElementById('custom-rate').value || '7.5';
+        let planInt = parseInt(currentPlan);
+        let baseRate = 1000;
+        let discountPer1000 = (sumInsured >= 500000) ? 20 : ((sumInsured >= 200000) ? 10 : 0);
+        let annualPremium = (sumInsured / 1000) * (baseRate - discountPer1000);
+        let totalPremium = annualPremium * planInt;
+        
+        let cbYearly = sumInsured * 0.01;
+        let matPercent = planInt === 7 ? 7 : 14.8;
+        let matGuar = sumInsured * matPercent;
+        let totalGuaranteed = (cbYearly * 24) + matGuar;
 
-        // Fetching table values dynamically
-        const y1_2 = document.getElementById('proj-y1-2').innerText;
-        const y1_4 = document.getElementById('proj-y1-4').innerText;
-        const y1_6 = document.getElementById('proj-y1-6').innerText;
-        const y1_custom = document.getElementById('proj-y1-custom').innerText;
+        let m_y1 = PROJ_MULT[currentPlan].yr1;
+        let m_y2 = PROJ_MULT[currentPlan].yr2;
         
-        const y2_2 = document.getElementById('proj-y2-2').innerText;
-        const y2_4 = document.getElementById('proj-y2-4').innerText;
-        const y2_6 = document.getElementById('proj-y2-6').innerText;
-        const y2_custom = document.getElementById('proj-y2-custom').innerText;
+        let val_y1_2 = Math.round(totalPremium * m_y1[0]);
+        let val_y1_4 = Math.round(totalPremium * m_y1[1]);
+        let val_y1_6 = Math.round(totalPremium * m_y1[2]);
+        let val_y2_2 = Math.round(totalPremium * m_y2[0]);
+        let val_y2_4 = Math.round(totalPremium * m_y2[1]);
+        let val_y2_6 = Math.round(totalPremium * m_y2[2]);
         
-        const ng_tot_2 = document.getElementById('proj-ng-tot-2').innerText;
-        const ng_tot_4 = document.getElementById('proj-ng-tot-4').innerText;
-        const ng_tot_6 = document.getElementById('proj-ng-tot-6').innerText;
-        const ng_tot_custom = document.getElementById('proj-ng-tot-custom').innerText;
+        let customRate = parseFloat(document.getElementById('custom-rate').value) || 7.5;
+        let idx1_raw = Math.pow(1 + customRate/100, planInt);
+        let idx2_raw = Math.pow(1 + customRate/100, 25);
+        let val_y1_cust = Math.round((idx1_raw > 1) ? (0.5 * totalPremium * (idx1_raw - 1)) : 0);
+        let val_y2_cust = Math.round((idx2_raw > 1) ? (0.5 * totalPremium * (idx2_raw - 1)) : 0);
+
+        let isPlan15 = currentPlan === '15';
+        let hdrCol1 = '#154b42'; 
+        let hdrColRest = isPlan15 ? '#154b42' : '#e87c2b';
+        let totCol = isPlan15 ? '#154b42' : '#e87c2b';
+        let irrCol = isPlan15 ? '#e87c2b' : '#154b42';
+        let custCol = '#17406d';
+
+        let tbodyHTML = "";
         
-        const tot_2 = document.getElementById('proj-tot-2').innerText;
-        const tot_4 = document.getElementById('proj-tot-4').innerText;
-        const tot_6 = document.getElementById('proj-tot-6').innerText;
-        const tot_custom = document.getElementById('proj-tot-custom').innerText;
-        
-        const guar_mat = document.getElementById('proj-guarantee-mat').innerText;
-        const guar_tot = document.getElementById('proj-guarantee-total').innerText;
-        const cb_tot = document.getElementById('proj-cb-total-table').innerText;
+        for(let i = 1; i <= planInt; i++) {
+            let isTarget = (i === planInt);
+            let bgEmpty = isTarget ? '' : 'background-color: var(--gray-empty);';
+            let dbVal = annualPremium * i * 1.01;
+
+            tbodyHTML += `
+            <tr style="background-color: ${i % 2 === 0 ? '#f8fafc' : '#ffffff'};">
+                <td style="border: 1px solid #e2e8f0; padding: 5px;">${i}</td>
+                <td style="border: 1px solid #e2e8f0; padding: 5px;">${formatNum(annualPremium)}</td>
+                <td style="border: 1px solid #e2e8f0; padding: 5px;">${formatNum(cbYearly)}</td>
+                <td style="border: 1px solid #e2e8f0; padding: 5px; ${bgEmpty}">${isTarget ? formatNum(val_y1_2) : ''}</td>
+                <td style="border: 1px solid #e2e8f0; padding: 5px; ${bgEmpty}">${isTarget ? formatNum(val_y1_4) : ''}</td>
+                <td style="border: 1px solid #e2e8f0; padding: 5px; ${bgEmpty}">${isTarget ? formatNum(val_y1_6) : ''}</td>
+                <td style="border: 1px solid #e2e8f0; padding: 5px; ${bgEmpty}">${isTarget ? formatNum(val_y1_cust) : ''}</td>
+                <td style="border: 1px solid #e2e8f0; padding: 5px; background-color: #fdf5eb;">${formatNum(Math.round(dbVal))}</td>
+            </tr>
+            `;
+        }
+
+        let dbFlat = Math.round(totalPremium * 1.01);
+        tbodyHTML += `
+        <tr style="background-color: #f1f5f9; font-weight: 600;">
+            <td style="border: 1px solid #e2e8f0; padding: 5px;">${planInt + 1} - 24</td>
+            <td style="border: 1px solid #e2e8f0; padding: 5px;">-</td>
+            <td style="border: 1px solid #e2e8f0; padding: 5px;">ปีละ ${formatNum(cbYearly)}</td>
+            <td colspan="4" style="border: 1px solid #e2e8f0; padding: 5px; background-color: var(--gray-empty);"></td>
+            <td style="border: 1px solid #e2e8f0; padding: 5px; background-color: #fdf5eb;">${formatNum(dbFlat)}</td>
+        </tr>
+        `;
+
+        tbodyHTML += `
+        <tr style="background-color: #ffffff; font-weight: 600;">
+            <td style="border: 1px solid #e2e8f0; padding: 5px;">25</td>
+            <td style="border: 1px solid #e2e8f0; padding: 5px;">-</td>
+            <td style="border: 1px solid #e2e8f0; padding: 5px;">${formatNum(matGuar)}</td>
+            <td style="border: 1px solid #e2e8f0; padding: 5px;">${formatNum(val_y2_2)}</td>
+            <td style="border: 1px solid #e2e8f0; padding: 5px;">${formatNum(val_y2_4)}</td>
+            <td style="border: 1px solid #e2e8f0; padding: 5px;">${formatNum(val_y2_6)}</td>
+            <td style="border: 1px solid #e2e8f0; padding: 5px; color: #0284c7;">${formatNum(val_y2_cust)}</td>
+            <td style="border: 1px solid #e2e8f0; padding: 5px; background-color: #fdf5eb;">${formatNum(matGuar)}</td>
+        </tr>
+        `;
+
+        let tot_2 = totalGuaranteed + val_y1_2 + val_y2_2;
+        let tot_4 = totalGuaranteed + val_y1_4 + val_y2_4;
+        let tot_6 = totalGuaranteed + val_y1_6 + val_y2_6;
+        let tot_cust = totalGuaranteed + val_y1_cust + val_y2_cust;
+
+        let ratio2 = (tot_2 / totalPremium).toFixed(1);
+        let ratio4 = (tot_4 / totalPremium).toFixed(1);
+        let ratio6 = (tot_6 / totalPremium).toFixed(1);
+        let ratioCust = (tot_cust / totalPremium).toFixed(1);
+
+        let irr2 = getIRR(currentPlan, annualPremium, cbYearly, matGuar, val_y1_2, val_y2_2);
+        let irr4 = getIRR(currentPlan, annualPremium, cbYearly, matGuar, val_y1_4, val_y2_4);
+        let irr6 = getIRR(currentPlan, annualPremium, cbYearly, matGuar, val_y1_6, val_y2_6);
+        let irrCust = getIRR(currentPlan, annualPremium, cbYearly, matGuar, val_y1_cust, val_y2_cust);
+
+        tbodyHTML += `
+        <tr style="font-weight: bold;">
+            <td style="border: none; background: white;"></td>
+            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 10px 4px;">รวมชำระค่าเบี้ยฯ<br><span style="font-size: 15px;">${formatNum(totalPremium)}</span></td>
+            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 10px 4px;">รวมรับเงินคืน<br><span style="font-size: 15px;">${formatNum(totalGuaranteed)}</span></td>
+            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 10px 4px;">+<br>รวมรับผลประโยชน์<br>ที่ไม่รับรองการจ่าย<br><span style="font-size: 14px;">${formatNum(val_y1_2 + val_y2_2)}</span></td>
+            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 10px 4px;">+<br>รวมรับผลประโยชน์<br>ที่ไม่รับรองการจ่าย<br><span style="font-size: 14px;">${formatNum(val_y1_4 + val_y2_4)}</span></td>
+            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 10px 4px;">+<br>รวมรับผลประโยชน์<br>ที่ไม่รับรองการจ่าย<br><span style="font-size: 15px;">${formatNum(val_y1_6 + val_y2_6)}</span></td>
+            <td style="border: 1px solid white; background:${custCol}; color: white; padding: 10px 4px;">+<br>รวมรับผลประโยชน์<br>ที่ไม่รับรองการจ่าย<br><span style="font-size: 15px;">${formatNum(val_y1_cust + val_y2_cust)}</span></td>
+            <td style="border: none; background: white;"></td>
+        </tr>
+        <tr style="font-weight: bold; background: #f8fafc;">
+            <td colspan="3" style="border: 1px solid #e2e8f0; padding: 8px; text-align: right; color: var(--text-dark);">รวมผลประโยชน์ ต่อ เบี้ยฯ รวม</td>
+            <td style="border: 1px solid #e2e8f0; padding: 8px; color: var(--text-dark);">${ratio2} เท่า</td>
+            <td style="border: 1px solid #e2e8f0; padding: 8px; color: var(--text-dark);">${ratio4} เท่า</td>
+            <td style="border: 1px solid #e2e8f0; padding: 8px; color: var(--text-dark);">${ratio6} เท่า</td>
+            <td style="border: 1px solid #e2e8f0; padding: 8px; color: #0284c7;">${ratioCust} เท่า</td>
+            <td style="border: none; background: white;"></td>
+        </tr>
+        <tr style="font-weight: bold;">
+            <td colspan="3" style="border: 1px solid white; background:${irrCol}; color: white; padding: 10px; text-align: right; font-size: 14px;">อัตราผลตอบแทนเฉลี่ยต่อปี (IRR)</td>
+            <td style="border: 1px solid white; background:${irrCol}; color: white; padding: 10px; font-size: 15px;">${irr2}%</td>
+            <td style="border: 1px solid white; background:${irrCol}; color: white; padding: 10px; font-size: 15px;">${irr4}%</td>
+            <td style="border: 1px solid white; background:${irrCol}; color: white; padding: 10px; font-size: 15px;">${irr6}%</td>
+            <td style="border: 1px solid white; background:${custCol}; color: white; padding: 10px; font-size: 15px;">${irrCust}%</td>
+            <td style="border: none; background: white;"></td>
+        </tr>
+        `;
 
         let htmlContent = `
             <button class="close-report-btn" onclick="closeReport()"><i class="fa-solid fa-xmark"></i></button>
-            <div id="capture-area" style="max-width: 1000px; margin: 0 auto; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); font-family: 'Prompt', sans-serif;">
+            <div id="capture-area" style="max-width: 950px; margin: 0 auto; background: white; padding: 30px; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); font-family: 'Prompt', sans-serif;">
                 
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--primary); padding-bottom: 20px; margin-bottom: 30px;">
-                    <div>
-                        <h1 style="color: var(--navy); margin: 0; font-size: 28px;">ตารางประมาณการผลประโยชน์</h1>
-                        <h2 style="color: var(--primary); margin: 5px 0 0 0; font-size: 20px;">SUPER SMART SAVINGS ${plan} (Index Linked)</h2>
+                <div style="text-align: left; margin-bottom: 15px; position: relative;">
+                    <div style="position: absolute; right: 0; top: 0; text-align: right;">
+                        <div style="font-weight: 700; color: var(--navy); font-size: 14px; padding-bottom: 5px; border-bottom: 2px solid var(--border-color);">ประกัน SUPER SMART SAVINGS<br>(Index Linked)</div>
                     </div>
-                    <div style="background: #f8fafc; padding: 10px 20px; border-radius: 12px; border: 1px solid var(--border-color); text-align: right;">
-                        <div style="font-size: 14px; color: var(--text-grey);">ลูกค้าอายุ <strong style="color:var(--text-dark);">${age}</strong> ปี</div>
-                        <div style="font-size: 14px; color: var(--text-grey);">ทุนประกันภัย <strong style="color:var(--primary); font-size:16px;">${sa}</strong> บาท</div>
-                        <div style="font-size: 14px; color: var(--text-grey);">เบี้ยรวมตลอดสัญญา <strong style="color:var(--navy);">${totalPrem}</strong> บาท</div>
+                    <h1 style="color: #e86614; font-size: 26px; margin: 0;">ตัวอย่าง การจ่ายผลประโยชน์</h1>
+                    <h2 style="color: var(--navy); font-size: 18px; margin: 5px 0;">ประกัน SUPER SMART SAVINGS 25/${currentPlan} (Index Linked)</h2>
+                    
+                    <div style="display: flex; align-items: center; gap: 15px; margin-top: 15px;">
+                        <i class="fa-solid fa-user" style="font-size: 35px; color: #e86614;"></i>
+                        <div style="font-size: 15px; color: var(--text-dark);">
+                            ตัวอย่าง : ลูกค้า อายุ ${currentAge} ปี ซื้อประกัน SUPER SMART SAVINGS 25/${currentPlan} (Index Linked)<br>
+                            ทุนประกันภัย ${formatNum(sumInsured)} บาท
+                        </div>
                     </div>
+                    <div style="text-align: right; font-size: 11px; margin-top: -10px; color: var(--text-grey);">หน่วย : บาท</div>
                 </div>
 
-                <div class="proj-table-wrapper" style="pointer-events: auto;">
-                    <table class="proj-table" style="width: 100%;">
+                <div class="proj-table-wrapper" style="pointer-events: auto; border: none;">
+                    <table class="proj-table main-table" style="width: 100%; border-collapse: collapse; text-align: center; font-size: 12px;">
                         <thead>
                             <tr>
-                                <th rowspan="2">สิ้นปีกรมธรรม์ที่</th>
-                                <th rowspan="2">เบี้ยประกันสะสม</th>
-                                <th rowspan="2">เงินคืนรับรอง<br>การจ่าย</th>
-                                <th colspan="4" style="border-bottom: 1px solid rgba(255,255,255,0.2);">ประมาณการผลประโยชน์ที่ไม่รับรองการจ่าย (โอกาสรับโบนัส)</th>
+                                <th rowspan="2" style="background:${hdrCol1}; color:white; border: 1px solid white;">ปี<br>กรมธรรม์<br>ที่</th>
+                                <th rowspan="2" style="background:${hdrColRest}; color:white; border: 1px solid white;">เบี้ย<br>ประกันภัย</th>
+                                <th rowspan="2" style="background:${hdrColRest}; color:white; border: 1px solid white;">เงินคืนแบบ<br>รับรองการจ่าย<br>(ณ วันครบรอบปี<br>กรมธรรม์)</th>
+                                <th colspan="4" style="background:${hdrColRest}; color:white; border: 1px solid white; font-weight:normal;">ผลประโยชน์ที่ไม่รับรองการจ่ายกรณีมีชีวิตอยู่ (ถ้ามี)<hr style="border:0; border-top:1px solid rgba(255,255,255,0.3); margin:5px 0;">ระดับดัชนีอ้างอิงเปลี่ยนแปลง (% เฉลี่ยต่อปี)</th>
+                                <th rowspan="2" style="background:${hdrColRest}; color:white; border: 1px solid white;">ผลประโยชน์<br>กรณีเสียชีวิต</th>
                             </tr>
                             <tr>
-                                <th>กรณีดัชนีเติบโต<br>2% ต่อปี</th>
-                                <th>กรณีดัชนีเติบโต<br>4% ต่อปี</th>
-                                <th style="color: var(--gold);">กรณีดัชนีเติบโต<br>6% ต่อปี</th>
-                                <th style="color: #60a5fa;">กำหนดเอง<br>${customRate}% ต่อปี</th>
+                                <th style="background:${hdrColRest}; color:white; border: 1px solid white;">2%</th>
+                                <th style="background:${hdrColRest}; color:white; border: 1px solid white;">4%</th>
+                                <th style="background:${hdrColRest}; color:white; border: 1px solid white;">6%</th>
+                                <th style="background:#4b82c3; color:white; border: 1px solid white;">สมมุติเอง ${customRate}%</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><strong>ปีที่ ${currentPlan}</strong></td>
-                                <td class="td-acc">${totalPrem}</td>
-                                <td class="td-guarantee">-</td>
-                                <td class="td-highlight">${y1_2}</td>
-                                <td class="td-highlight">${y1_4}</td>
-                                <td class="td-highlight" style="font-size: 15px;">${y1_6}</td>
-                                <td class="td-custom" style="font-size: 15px;">${y1_custom}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>รวมเงินคืนรายปี<br>(ปีที่ 1-24)</strong></td>
-                                <td class="td-acc">-</td>
-                                <td class="td-guarantee">${cb_tot}</td>
-                                <td class="td-highlight">-</td>
-                                <td class="td-highlight">-</td>
-                                <td class="td-highlight">-</td>
-                                <td class="td-custom">-</td>
-                            </tr>
-                            <tr>
-                                <td><strong>ปีที่ 25</strong></td>
-                                <td class="td-acc">${totalPrem}</td>
-                                <td class="td-guarantee">${guar_mat}</td>
-                                <td class="td-highlight">${y2_2}</td>
-                                <td class="td-highlight">${y2_4}</td>
-                                <td class="td-highlight" style="font-size: 15px;">${y2_6}</td>
-                                <td class="td-custom" style="font-size: 15px;">${y2_custom}</td>
-                            </tr>
-                            <tr style="background-color: #f1f5f9;">
-                                <td><strong>รวมผล<br>ประโยชน์ไม่รับรอง</strong></td>
-                                <td class="td-acc">-</td>
-                                <td class="td-guarantee">-</td>
-                                <td class="td-highlight" style="font-size: 14px;">${ng_tot_2}</td>
-                                <td class="td-highlight" style="font-size: 14px;">${ng_tot_4}</td>
-                                <td class="td-highlight" style="font-size: 15px; color: #c2410c;">${ng_tot_6}</td>
-                                <td class="td-custom" style="font-size: 15px; color: #0369a1;">${ng_tot_custom}</td>
-                            </tr>
-                            <tr style="background-color: #fff2e8; border-top: 2px solid var(--primary);">
-                                <td><strong>รวมรับผล<br>ประโยชน์ทั้งหมด</strong></td>
-                                <td class="td-acc">-</td>
-                                <td class="td-guarantee" style="font-size: 15px;">${guar_tot}</td>
-                                <td class="td-highlight" style="font-size: 15px;">${tot_2}</td>
-                                <td class="td-highlight" style="font-size: 15px;">${tot_4}</td>
-                                <td class="td-highlight" style="font-size: 16px; color: #c2410c;">${tot_6}</td>
-                                <td class="td-custom" style="font-size: 16px; color: #0369a1;">${tot_custom}</td>
-                            </tr>
+                            ${tbodyHTML}
                         </tbody>
                     </table>
                 </div>
 
-                <div class="footer-flex-container" style="display: flex; gap: 20px; align-items: stretch; margin-top: 15px;">
-                    <div style="flex: 1; font-size: 10px; color: var(--text-grey); line-height: 1.3; background: #fffcf5; padding: 12px 15px; border-radius: 8px; border: 1px dashed #fde68a;">
-                        <strong>หมายเหตุสำคัญ:</strong> * ตัวเลขนี้เป็นเพียงการแสดงตัวอย่างการคำนวณที่ Participation Rate (PR) 100% ตามทุนประกันภัยที่เลือกเท่านั้น ไม่ใช่การการันตีผลประโยชน์ที่จะได้รับจริง<br>
-                        * ผลประโยชน์ที่ไม่รับรองการจ่ายอ้างอิงผลตอบแทนจากดัชนี Morgan Stanley Multi-Asset Realtime Index 8% VT with 0.5% Decrement<br>
-                        * หากในกรณีที่แย่ที่สุด ดัชนีอ้างอิงติดลบหรือไม่มีผลตอบแทน ผลประโยชน์ที่ไม่รับรองการจ่ายจะมีค่าไม่ต่ำกว่าศูนย์ (การันตีเงินต้นไม่สูญหาย)
+                <div style="font-size: 10px; color: var(--text-grey); line-height: 1.2; margin-top: 15px;">
+                    ผลประโยชน์ที่ไม่รับรองการจ่าย ในวันครบรอบปีกรมธรรม์ที่ ${currentPlan} และ 25 ตามตารางข้างต้น เป็นเพียงตัวอย่างเท่านั้น ซึ่งขึ้นอยู่กับผลตอบแทนจากการลงทุนอ้างอิงดัชนี Morgan Stanley Multi-Asset Realtime Index 8% VT with 0.5% Decrement และคำนวณมาจาก Participation Rate (PR) ที่ 100% และระดับดัชนีอ้างอิงเปลี่ยนแปลงเฉลี่ยต่อปี 2%, 4%, 6% และ ${customRate}%<br>
+                    ทั้งนี้ ผลประโยชน์ที่ไม่รับรองการจ่ายที่ได้รับจริงอาจจะไม่เท่ากับจำนวนที่แสดงไว้ในตารางข้างต้น อาจสูงกว่าหรือต่ำกว่าที่แสดงไว้ในตัวอย่างได้ ซึ่งในกรณีที่แย่ที่สุด อาจไม่มีการจ่ายผลประโยชน์ที่ไม่รับรองการจ่าย อย่างไรก็ตาม ผลประโยชน์ที่ไม่รับรองการจ่ายจะมีค่าไม่ต่ำกว่าศูนย์
+                </div>
+
+                <div class="footer-flex-container" style="display: flex; gap: 20px; align-items: flex-end; margin-top: 15px;">
+                    <div style="flex: 1; font-size: 9px; color: #94a3b8; line-height: 1.2;">
+                        <strong>หมายเหตุ:</strong><br>
+                        * Participation Rate (PR) คือ อัตราการมีส่วนร่วมในผลตอบแทนที่เกิดจากการเปลี่ยนแปลงของดัชนี<br>
+                        * เนื่องจากดัชนี Morgan Stanley Multi-Asset Realtime Index 8% VT with 0.5% Decrement มีการคำนวณในสกุลเงินดอลลาร์สหรัฐ บริษัทฯ จึงต้องทำการแปลงระดับดัชนีให้เป็นสกุลเงินไทยบาท ก่อนที่จะนำมาคำนวณผลประโยชน์ที่ไม่รับรองการจ่าย<br>
+                        * ผลประโยชน์ที่ไม่รับรองการจ่าย อ้างอิงผลตอบแทนจากผลการดำเนินงานของดัชนี Morgan Stanley Multi-Asset Realtime Index 8% VT with 0.5% Decrement โดยไม่ได้ลงทุนในดัชนีดังกล่าวโดยตรง
                     </div>
 
                     <div style="display: flex; align-items: center; gap: 15px; background: #f8fafc; padding: 10px 15px; border-radius: 12px; border: 1px solid var(--border-color); flex-shrink: 0;">
-                        <img src="agent.png" alt="ตัวแทน" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);" onerror="this.src='https://placehold.co/100x100/e86614/ffffff?text=Agent'">
+                        <img src="agent.png" alt="ตัวแทน" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);" onerror="this.src='https://placehold.co/100x100/e86614/ffffff?text=Agent'">
                         <div>
-                            <div style="font-weight: 700; color: var(--navy); font-size: 16px;">นฤมล คำใบ (ต๋อย)</div>
-                            <div style="font-size: 13px; color: var(--text-grey);">ผู้จัดการขาย | ใบอนุญาต 6901010926</div>
-                            <div style="font-size: 14px; font-weight: 600; color: var(--primary); margin-top: 3px;"><i class="fa-solid fa-phone"></i> โทร: 086-901-7235 &nbsp; <i class="fab fa-line" style="color:#06C755;"></i> Line: @toifwd</div>
+                            <div style="font-weight: 700; color: var(--navy); font-size: 14px;">นฤมล คำใบ (ต๋อย)</div>
+                            <div style="font-size: 11px; color: var(--text-grey);">ผู้จัดการขาย | ใบอนุญาต 6901010926</div>
+                            <div style="font-size: 12px; font-weight: 600; color: var(--primary); margin-top: 2px;"><i class="fa-solid fa-phone"></i> โทร: 086-901-7235 &nbsp; <i class="fab fa-line" style="color:#06C755;"></i> Line: @toifwd</div>
                         </div>
                     </div>
                 </div>
@@ -1032,7 +1138,7 @@
         const target = document.getElementById("capture-area");
         html2canvas(target, { scale: 2, backgroundColor: "#ffffff" }).then(canvas => {
             const link = document.createElement('a');
-            link.download = `ตารางประมาณการผลประโยชน์-FWD-SSS.jpg`;
+            link.download = `ตารางผลประโยชน์รายปี-FWD-SSS.jpg`;
             link.href = canvas.toDataURL('image/jpeg', 0.95);
             link.click();
             btn.innerHTML = originalText;
@@ -1054,29 +1160,27 @@
         html2canvas(target, { scale: 2, backgroundColor: "#ffffff" }).then(canvas => {
             const imgData = canvas.toDataURL('image/jpeg', 0.95);
             const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF('l', 'mm', 'a4'); // Landscape A4
+            const pdf = new jsPDF('p', 'mm', 'a4'); // Portrait A4
             
-            const pdfWidth = 297; // A4 แนวนอนกว้าง 297mm
-            const pdfHeight = 210; // A4 แนวนอนสูง 210mm
-            const margin = 10; // กำหนดขอบ 10mm
+            const pdfWidth = 210; // A4 แนวตั้งกว้าง 210mm
+            const pdfHeight = 297; // A4 แนวตั้งสูง 297mm
+            const margin = 10;
             const maxWidth = pdfWidth - (margin * 2);
             const maxHeight = pdfHeight - (margin * 2);
             
             let imgWidth = maxWidth;
             let imgHeight = (canvas.height * imgWidth) / canvas.width;
             
-            // หากความสูงเกินหน้ากระดาษ ให้ปรับขนาดอ้างอิงความสูงแทน
             if (imgHeight > maxHeight) {
                 imgHeight = maxHeight;
                 imgWidth = (canvas.width * imgHeight) / canvas.height;
             }
             
-            // จัดกึ่งกลางหน้า
             const xOffset = (pdfWidth - imgWidth) / 2;
             const yOffset = (pdfHeight - imgHeight) / 2;
             
             pdf.addImage(imgData, 'JPEG', xOffset, yOffset, imgWidth, imgHeight);
-            pdf.save(`ตารางประมาณการผลประโยชน์-FWD-SSS.pdf`);
+            pdf.save(`ตารางผลประโยชน์รายปี-FWD-SSS.pdf`);
             
             btn.innerHTML = originalText;
             btn.disabled = false;
