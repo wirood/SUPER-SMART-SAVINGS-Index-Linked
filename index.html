@@ -362,7 +362,10 @@
                     <div class="agent-details-main">
                         <div class="care-by">ตัวแทนผู้ดูแล:</div>
                         <div class="name">นฤมล คำใบ (ต๋อย)</div>
-                        <div class="license">ใบอนุญาต: <strong>6901010926</strong></div>
+                        <div class="license">
+                            ใบอนุญาต: <strong>6901010926</strong><br>
+                            <span style="font-size: 11px;">เริ่มงาน: 28/06/2006 (อายุงาน 20 ปี 4 เดือน)</span>
+                        </div>
                         <a href="tel:0869017235" class="btn-call"><i class="fa-solid fa-phone"></i> 086-901-7235</a>
                     </div>
                 </div>
@@ -508,6 +511,14 @@
                                 <td class="td-highlight" style="font-size: 16px;" id="proj-y1-6">3,110,927</td>
                             </tr>
                             <tr>
+                                <td><strong>รวมเงินคืนรายปี (ปีที่ 1-24)</strong></td>
+                                <td class="td-acc">-</td>
+                                <td class="td-guarantee" id="proj-cb-total-table">72,000</td>
+                                <td class="td-highlight">-</td>
+                                <td class="td-highlight">-</td>
+                                <td class="td-highlight">-</td>
+                            </tr>
+                            <tr>
                                 <td><strong>ปีที่ 25</strong></td>
                                 <td class="td-acc" id="proj-acc-prem-25">4,455,000</td>
                                 <td class="td-guarantee" id="proj-guarantee-mat">4,440,000</td>
@@ -524,7 +535,7 @@
                                 <td class="td-highlight" style="font-size: 16px; color: #c2410c;" id="proj-ng-tot-6">10,443,634</td>
                             </tr>
                             <tr style="background-color: #fff2e8; border-top: 2px solid var(--primary);">
-                                <td><strong>รวมรับผลประโยชน์ทั้งหมด</strong><br><span style="font-size:11px;">(รวมเงินคืนรายปี <span id="proj-cb-total-text">72,000</span> บ.)</span></td>
+                                <td><strong>รวมรับผลประโยชน์ทั้งหมด</strong></td>
                                 <td class="td-acc">-</td>
                                 <td class="td-guarantee" style="font-size: 16px;" id="proj-guarantee-total">4,512,000</td>
                                 <td class="td-highlight" style="font-size: 16px;" id="proj-tot-2">6,709,429</td>
@@ -809,7 +820,9 @@
         
         document.getElementById('proj-guarantee-total').innerText = formatNum(totalGuaranteed);
         document.getElementById('proj-guarantee-mat').innerText = formatNum(matBenefit);
-        document.getElementById('proj-cb-total-text').innerText = formatNum(cbTotal);
+        
+        // Populate the added column for cash back total
+        document.getElementById('proj-cb-total-table').innerText = formatNum(cbTotal);
 
         document.getElementById('fwd-official-link').href = currentPlan === '15' ? "https://www.fwd.co.th/th/index/ms-ma-8v050d-e86a/" : "https://www.fwd.co.th/th/index/ms-ma-8v050d-e87a/";
 
@@ -832,7 +845,7 @@
     function openProjectionReport() {
         const age = document.getElementById('age-input').value;
         const plan = `25/${currentPlan}`;
-        const sa = document.getElementById('sum-display-text').innerText;
+        const sa = document.getElementById('dash-sa').innerText;
         const totalPrem = document.getElementById('display-total-premium').innerText;
 
         // Fetching table values dynamically
@@ -850,7 +863,7 @@
         const tot_6 = document.getElementById('proj-tot-6').innerText;
         const guar_mat = document.getElementById('proj-guarantee-mat').innerText;
         const guar_tot = document.getElementById('proj-guarantee-total').innerText;
-        const cb_tot = document.getElementById('proj-cb-total-text').innerText;
+        const cb_tot = document.getElementById('proj-cb-total-table').innerText;
 
         let htmlContent = `
             <button class="close-report-btn" onclick="closeReport()"><i class="fa-solid fa-xmark"></i></button>
@@ -893,6 +906,14 @@
                                 <td class="td-highlight" style="font-size: 16px;">${y1_6}</td>
                             </tr>
                             <tr>
+                                <td><strong>รวมเงินคืนรายปี (ปีที่ 1-24)</strong></td>
+                                <td class="td-acc">-</td>
+                                <td class="td-guarantee">${cb_tot}</td>
+                                <td class="td-highlight">-</td>
+                                <td class="td-highlight">-</td>
+                                <td class="td-highlight">-</td>
+                            </tr>
+                            <tr>
                                 <td><strong>ปีที่ 25</strong></td>
                                 <td class="td-acc">${totalPrem}</td>
                                 <td class="td-guarantee">${guar_mat}</td>
@@ -909,7 +930,7 @@
                                 <td class="td-highlight" style="font-size: 16px; color: #c2410c;">${ng_tot_6}</td>
                             </tr>
                             <tr style="background-color: #fff2e8; border-top: 2px solid var(--primary);">
-                                <td><strong>รวมรับผลประโยชน์ทั้งหมด</strong><br><span style="font-size:11px;">(รวมเงินคืนรายปี ${cb_tot} บ.)</span></td>
+                                <td><strong>รวมรับผลประโยชน์ทั้งหมด</strong></td>
                                 <td class="td-acc">-</td>
                                 <td class="td-guarantee" style="font-size: 16px;">${guar_tot}</td>
                                 <td class="td-highlight" style="font-size: 16px;">${tot_2}</td>
@@ -992,12 +1013,26 @@
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('l', 'mm', 'a4'); // Landscape A4
             
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const margin = 10;
-            const calcWidth = pdfWidth - (margin * 2);
-            const calcHeight = (canvas.height * calcWidth) / canvas.width;
+            const pdfWidth = 297; // A4 แนวนอนกว้าง 297mm
+            const pdfHeight = 210; // A4 แนวนอนสูง 210mm
+            const margin = 10; // กำหนดขอบ 10mm
+            const maxWidth = pdfWidth - (margin * 2);
+            const maxHeight = pdfHeight - (margin * 2);
             
-            pdf.addImage(imgData, 'JPEG', margin, margin, calcWidth, calcHeight);
+            let imgWidth = maxWidth;
+            let imgHeight = (canvas.height * imgWidth) / canvas.width;
+            
+            // หากความสูงเกินหน้ากระดาษ ให้ปรับขนาดอ้างอิงความสูงแทน
+            if (imgHeight > maxHeight) {
+                imgHeight = maxHeight;
+                imgWidth = (canvas.width * imgHeight) / canvas.height;
+            }
+            
+            // จัดกึ่งกลางหน้า
+            const xOffset = (pdfWidth - imgWidth) / 2;
+            const yOffset = (pdfHeight - imgHeight) / 2;
+            
+            pdf.addImage(imgData, 'JPEG', xOffset, yOffset, imgWidth, imgHeight);
             pdf.save(`ตารางประมาณการผลประโยชน์-FWD-SSS.pdf`);
             
             btn.innerHTML = originalText;
