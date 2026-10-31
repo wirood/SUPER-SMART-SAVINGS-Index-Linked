@@ -975,7 +975,6 @@
 
         let tbodyHTML = "";
         
-        // เพิ่ม Inline style "text-align: center;" เพื่อบังคับให้ html2canvas รับทราบและแสดงผลตรงกลาง
         for(let i = 1; i <= planInt; i++) {
             let isTarget = (i === planInt);
             let bgEmpty = isTarget ? '' : 'background-color: var(--gray-empty);';
@@ -1141,7 +1140,7 @@
                         </div>
                     </div>
 
-                    <!-- Detailed Projection Table (ย่อขนาดฟอนต์ และ Line-height) -->
+                    <!-- Detailed Projection Table (แก้ปัญหาหัวตารางและแถบสีเวลาส่งออก) -->
                     <div style="margin-top: 0px;">
                         <h3 style="margin: 0 0 6px 0; font-size: 13px; color: var(--navy);"><i class="fa-solid fa-chart-column" style="color:var(--gold);"></i> ตารางรายละเอียดผลประโยชน์ตลอดสัญญา</h3>
                         
@@ -1149,17 +1148,39 @@
                             <table class="proj-table main-table" style="width: 100%; border-collapse: collapse; text-align: center; font-size: 10px;">
                                 <thead>
                                     <tr>
-                                        <th rowspan="2" style="background:${hdrCol1}; color:white; border: 1px solid white; padding: 2px; text-align: center; vertical-align: middle;">ปี<br>กรมธรรม์</th>
-                                        <th rowspan="2" style="background:${hdrColRest}; color:white; border: 1px solid white; padding: 2px; text-align: center; vertical-align: middle;">เบี้ย<br>ประกันภัย</th>
-                                        <th rowspan="2" style="background:${hdrColRest}; color:white; border: 1px solid white; padding: 2px; text-align: center; vertical-align: middle;">เงินคืน<br>รับรองการจ่าย</th>
-                                        <th colspan="4" style="background:${hdrColRest}; color:white; border: 1px solid white; font-weight:normal; padding: 2px; text-align: center; vertical-align: middle;">ผลประโยชน์ที่ไม่รับรองการจ่าย (โอกาสรับโบนัสอ้างอิงดัชนี)<hr style="border:0; border-top:1px solid rgba(255,255,255,0.3); margin:3px 0;">ระดับดัชนีอ้างอิงเปลี่ยนแปลง (% เฉลี่ยต่อปี)</th>
-                                        <th rowspan="2" style="background:${hdrColRest}; color:white; border: 1px solid white; padding: 2px; text-align: center; vertical-align: middle;">ผลประโยชน์<br>กรณีเสียชีวิต</th>
+                                        <th rowspan="2" style="border: 1px solid white; padding: 0; background-color:${hdrCol1};">
+                                            <div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; min-height: 48px; background-color:${hdrCol1}; color: white; text-align: center; box-sizing: border-box;">ปี<br>กรมธรรม์</div>
+                                        </th>
+                                        <th rowspan="2" style="border: 1px solid white; padding: 0; background-color:${hdrColRest};">
+                                            <div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; min-height: 48px; background-color:${hdrColRest}; color: white; text-align: center; box-sizing: border-box;">เบี้ย<br>ประกันภัย</div>
+                                        </th>
+                                        <th rowspan="2" style="border: 1px solid white; padding: 0; background-color:${hdrColRest};">
+                                            <div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; min-height: 48px; background-color:${hdrColRest}; color: white; text-align: center; box-sizing: border-box;">เงินคืน<br>รับรองการจ่าย</div>
+                                        </th>
+                                        <th colspan="4" style="border: 1px solid white; padding: 0; background-color:${hdrColRest}; font-weight:normal;">
+                                            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; min-height: 24px; background-color:${hdrColRest}; color: white; box-sizing: border-box; padding: 4px;">
+                                                <div style="margin-bottom: 3px;">ผลประโยชน์ที่ไม่รับรองการจ่าย (โอกาสรับโบนัสอ้างอิงดัชนี)</div>
+                                                <div style="width: 90%; border-top: 1px solid rgba(255,255,255,0.3); margin-bottom: 3px;"></div>
+                                                <div>ระดับดัชนีอ้างอิงเปลี่ยนแปลง (% เฉลี่ยต่อปี)</div>
+                                            </div>
+                                        </th>
+                                        <th rowspan="2" style="border: 1px solid white; padding: 0; background-color:${hdrColRest};">
+                                            <div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; min-height: 48px; background-color:${hdrColRest}; color: white; text-align: center; box-sizing: border-box;">ผลประโยชน์<br>กรณีเสียชีวิต</div>
+                                        </th>
                                     </tr>
                                     <tr>
-                                        <th style="background:${hdrColRest}; color:white; border: 1px solid white; padding: 2px; text-align: center; vertical-align: middle;">2%</th>
-                                        <th style="background:${hdrColRest}; color:white; border: 1px solid white; padding: 2px; text-align: center; vertical-align: middle;">4%</th>
-                                        <th style="background:${hdrColRest}; color:white; border: 1px solid white; padding: 2px; text-align: center; vertical-align: middle;">6%</th>
-                                        <th style="background:#4b82c3; color:white; border: 1px solid white; padding: 2px; text-align: center; vertical-align: middle;">สมมุติเอง ${customRate}%</th>
+                                        <th style="border: 1px solid white; padding: 0; background-color:${hdrColRest};">
+                                            <div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; min-height: 24px; background-color:${hdrColRest}; color: white; text-align: center; box-sizing: border-box;">2%</div>
+                                        </th>
+                                        <th style="border: 1px solid white; padding: 0; background-color:${hdrColRest};">
+                                            <div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; min-height: 24px; background-color:${hdrColRest}; color: white; text-align: center; box-sizing: border-box;">4%</div>
+                                        </th>
+                                        <th style="border: 1px solid white; padding: 0; background-color:${hdrColRest};">
+                                            <div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; min-height: 24px; background-color:${hdrColRest}; color: white; text-align: center; box-sizing: border-box;">6%</div>
+                                        </th>
+                                        <th style="border: 1px solid white; padding: 0; background-color:#4b82c3;">
+                                            <div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; min-height: 24px; background-color:#4b82c3; color: white; text-align: center; box-sizing: border-box;">สมมุติเอง ${customRate}%</div>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
