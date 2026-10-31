@@ -975,7 +975,7 @@
 
         let tbodyHTML = "";
         
-        // ปรับ Padding ในตารางให้เล็กลงเล็กน้อย เพื่อลดความสูงรวม ป้องกันส่วน Footer ตกขอบ
+        // เพิ่ม Inline style "text-align: center;" เพื่อบังคับให้ html2canvas รับทราบและแสดงผลตรงกลาง
         for(let i = 1; i <= planInt; i++) {
             let isTarget = (i === planInt);
             let bgEmpty = isTarget ? '' : 'background-color: var(--gray-empty);';
@@ -983,14 +983,14 @@
 
             tbodyHTML += `
             <tr style="background-color: ${i % 2 === 0 ? '#f8fafc' : '#ffffff'};">
-                <td style="border: 1px solid #e2e8f0; padding: 1.5px 4px; white-space:nowrap;">${i}</td>
-                <td style="border: 1px solid #e2e8f0; padding: 1.5px 4px; white-space:nowrap;">${formatNum(annualPremium)}</td>
-                <td style="border: 1px solid #e2e8f0; padding: 1.5px 4px; white-space:nowrap;">${formatNum(cbYearly)}</td>
-                <td style="border: 1px solid #e2e8f0; padding: 1.5px 4px; white-space:nowrap; ${bgEmpty}">${isTarget ? formatNum(val_y1_2) : ''}</td>
-                <td style="border: 1px solid #e2e8f0; padding: 1.5px 4px; white-space:nowrap; ${bgEmpty}">${isTarget ? formatNum(val_y1_4) : ''}</td>
-                <td style="border: 1px solid #e2e8f0; padding: 1.5px 4px; white-space:nowrap; ${bgEmpty}">${isTarget ? formatNum(val_y1_6) : ''}</td>
-                <td style="border: 1px solid #e2e8f0; padding: 1.5px 4px; white-space:nowrap; ${bgEmpty}">${isTarget ? formatNum(val_y1_cust) : ''}</td>
-                <td style="border: 1px solid #e2e8f0; padding: 1.5px 4px; white-space:nowrap; background-color: #fdf5eb;">${formatNum(Math.round(dbVal))}</td>
+                <td style="border: 1px solid #e2e8f0; padding: 1.5px 4px; white-space:nowrap; text-align: center;">${i}</td>
+                <td style="border: 1px solid #e2e8f0; padding: 1.5px 4px; white-space:nowrap; text-align: center;">${formatNum(annualPremium)}</td>
+                <td style="border: 1px solid #e2e8f0; padding: 1.5px 4px; white-space:nowrap; text-align: center;">${formatNum(cbYearly)}</td>
+                <td style="border: 1px solid #e2e8f0; padding: 1.5px 4px; white-space:nowrap; text-align: center; ${bgEmpty}">${isTarget ? formatNum(val_y1_2) : ''}</td>
+                <td style="border: 1px solid #e2e8f0; padding: 1.5px 4px; white-space:nowrap; text-align: center; ${bgEmpty}">${isTarget ? formatNum(val_y1_4) : ''}</td>
+                <td style="border: 1px solid #e2e8f0; padding: 1.5px 4px; white-space:nowrap; text-align: center; ${bgEmpty}">${isTarget ? formatNum(val_y1_6) : ''}</td>
+                <td style="border: 1px solid #e2e8f0; padding: 1.5px 4px; white-space:nowrap; text-align: center; ${bgEmpty}">${isTarget ? formatNum(val_y1_cust) : ''}</td>
+                <td style="border: 1px solid #e2e8f0; padding: 1.5px 4px; white-space:nowrap; text-align: center; background-color: #fdf5eb;">${formatNum(Math.round(dbVal))}</td>
             </tr>
             `;
         }
@@ -998,24 +998,24 @@
         let dbFlat = Math.round(totalPremium * 1.01);
         tbodyHTML += `
         <tr style="background-color: #f1f5f9; font-weight: 600;">
-            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap;">${planInt + 1} - 24</td>
-            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap;">-</td>
-            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap;">ปีละ ${formatNum(cbYearly)}</td>
-            <td colspan="4" style="border: 1px solid #e2e8f0; padding: 2px 4px; background-color: var(--gray-empty);"></td>
-            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap; background-color: #fdf5eb;">${formatNum(dbFlat)}</td>
+            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap; text-align: center;">${planInt + 1} - 24</td>
+            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap; text-align: center;">-</td>
+            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap; text-align: center;">ปีละ ${formatNum(cbYearly)}</td>
+            <td colspan="4" style="border: 1px solid #e2e8f0; padding: 2px 4px; text-align: center; background-color: var(--gray-empty);"></td>
+            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap; text-align: center; background-color: #fdf5eb;">${formatNum(dbFlat)}</td>
         </tr>
         `;
 
         tbodyHTML += `
         <tr style="background-color: #ffffff; font-weight: 600;">
-            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap;">25</td>
-            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap;">-</td>
-            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap;">${formatNum(matGuar)}</td>
-            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap;">${formatNum(val_y2_2)}</td>
-            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap;">${formatNum(val_y2_4)}</td>
-            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap;">${formatNum(val_y2_6)}</td>
-            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap; color: #0284c7;">${formatNum(val_y2_cust)}</td>
-            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap; background-color: #fdf5eb;">${formatNum(matGuar)}</td>
+            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap; text-align: center;">25</td>
+            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap; text-align: center;">-</td>
+            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap; text-align: center;">${formatNum(matGuar)}</td>
+            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap; text-align: center;">${formatNum(val_y2_2)}</td>
+            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap; text-align: center;">${formatNum(val_y2_4)}</td>
+            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap; text-align: center;">${formatNum(val_y2_6)}</td>
+            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap; text-align: center; color: #0284c7;">${formatNum(val_y2_cust)}</td>
+            <td style="border: 1px solid #e2e8f0; padding: 2px 4px; white-space:nowrap; text-align: center; background-color: #fdf5eb;">${formatNum(matGuar)}</td>
         </tr>
         `;
 
@@ -1037,36 +1037,36 @@
         tbodyHTML += `
         <tr>
             <td style="border: none; background: white;"></td>
-            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 4px 2px; line-height:1.2; font-weight:400;">รวมชำระเบี้ย<br><span style="font-size: 12px; font-weight:600;">${formatNum(totalPremium)}</span></td>
-            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 4px 2px; line-height:1.2; font-weight:400;">รวมรับเงินคืน<br><span style="font-size: 12px; font-weight:600;">${formatNum(totalGuaranteed)}</span></td>
-            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 4px 2px; line-height:1.2; font-weight:400;">+<br>ผลประโยชน์ไม่รับรอง<br><span style="font-size: 12px; font-weight:600;">${formatNum(val_y1_2 + val_y2_2)}</span></td>
-            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 4px 2px; line-height:1.2; font-weight:400;">+<br>ผลประโยชน์ไม่รับรอง<br><span style="font-size: 12px; font-weight:600;">${formatNum(val_y1_4 + val_y2_4)}</span></td>
-            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 4px 2px; line-height:1.2; font-weight:400;">+<br>ผลประโยชน์ไม่รับรอง<br><span style="font-size: 12px; font-weight:600;">${formatNum(val_y1_6 + val_y2_6)}</span></td>
-            <td style="border: 1px solid white; background:${custCol}; color: white; padding: 4px 2px; line-height:1.2; font-weight:400;">+<br>ผลประโยชน์ไม่รับรอง<br><span style="font-size: 12px; font-weight:600;">${formatNum(val_y1_cust + val_y2_cust)}</span></td>
+            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 4px 2px; line-height:1.2; font-weight:400; text-align: center;">รวมชำระเบี้ย<br><span style="font-size: 12px; font-weight:600;">${formatNum(totalPremium)}</span></td>
+            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 4px 2px; line-height:1.2; font-weight:400; text-align: center;">รวมรับเงินคืน<br><span style="font-size: 12px; font-weight:600;">${formatNum(totalGuaranteed)}</span></td>
+            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 4px 2px; line-height:1.2; font-weight:400; text-align: center;">+<br>ผลประโยชน์ไม่รับรอง<br><span style="font-size: 12px; font-weight:600;">${formatNum(val_y1_2 + val_y2_2)}</span></td>
+            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 4px 2px; line-height:1.2; font-weight:400; text-align: center;">+<br>ผลประโยชน์ไม่รับรอง<br><span style="font-size: 12px; font-weight:600;">${formatNum(val_y1_4 + val_y2_4)}</span></td>
+            <td style="border: 1px solid white; background:${totCol}; color: white; padding: 4px 2px; line-height:1.2; font-weight:400; text-align: center;">+<br>ผลประโยชน์ไม่รับรอง<br><span style="font-size: 12px; font-weight:600;">${formatNum(val_y1_6 + val_y2_6)}</span></td>
+            <td style="border: 1px solid white; background:${custCol}; color: white; padding: 4px 2px; line-height:1.2; font-weight:400; text-align: center;">+<br>ผลประโยชน์ไม่รับรอง<br><span style="font-size: 12px; font-weight:600;">${formatNum(val_y1_cust + val_y2_cust)}</span></td>
             <td style="border: none; background: white;"></td>
         </tr>
         <tr style="background-color: #fffcf5; font-weight: 700; color: #b45309; font-size: 12px;">
             <td colspan="3" style="border: 1px solid #e2e8f0; padding: 6px 5px; text-align: right;">รวมรับผลประโยชน์ทั้งหมดตลอดสัญญา</td>
-            <td style="border: 1px solid #e2e8f0; padding: 6px 5px;">${formatNum(tot_2)}</td>
-            <td style="border: 1px solid #e2e8f0; padding: 6px 5px;">${formatNum(tot_4)}</td>
-            <td style="border: 1px solid #e2e8f0; padding: 6px 5px;">${formatNum(tot_6)}</td>
-            <td style="border: 1px solid #e2e8f0; padding: 6px 5px; color: #0369a1;">${formatNum(tot_cust)}</td>
+            <td style="border: 1px solid #e2e8f0; padding: 6px 5px; text-align: center;">${formatNum(tot_2)}</td>
+            <td style="border: 1px solid #e2e8f0; padding: 6px 5px; text-align: center;">${formatNum(tot_4)}</td>
+            <td style="border: 1px solid #e2e8f0; padding: 6px 5px; text-align: center;">${formatNum(tot_6)}</td>
+            <td style="border: 1px solid #e2e8f0; padding: 6px 5px; text-align: center; color: #0369a1;">${formatNum(tot_cust)}</td>
             <td style="border: none; background: white;"></td>
         </tr>
         <tr style="background: #f8fafc;">
             <td colspan="3" style="border: 1px solid #e2e8f0; padding: 4px 5px; text-align: right; color: var(--text-dark); font-weight: 500;">รวมผลประโยชน์ ต่อ เบี้ยฯ รวม</td>
-            <td style="border: 1px solid #e2e8f0; padding: 4px 5px; color: var(--text-dark); font-weight: 500;">${ratio2} เท่า</td>
-            <td style="border: 1px solid #e2e8f0; padding: 4px 5px; color: var(--text-dark); font-weight: 500;">${ratio4} เท่า</td>
-            <td style="border: 1px solid #e2e8f0; padding: 4px 5px; color: var(--text-dark); font-weight: 500;">${ratio6} เท่า</td>
-            <td style="border: 1px solid #e2e8f0; padding: 4px 5px; color: #0284c7; font-weight: 500;">${ratioCust} เท่า</td>
+            <td style="border: 1px solid #e2e8f0; padding: 4px 5px; text-align: center; color: var(--text-dark); font-weight: 500;">${ratio2} เท่า</td>
+            <td style="border: 1px solid #e2e8f0; padding: 4px 5px; text-align: center; color: var(--text-dark); font-weight: 500;">${ratio4} เท่า</td>
+            <td style="border: 1px solid #e2e8f0; padding: 4px 5px; text-align: center; color: var(--text-dark); font-weight: 500;">${ratio6} เท่า</td>
+            <td style="border: 1px solid #e2e8f0; padding: 4px 5px; text-align: center; color: #0284c7; font-weight: 500;">${ratioCust} เท่า</td>
             <td style="border: none; background: white;"></td>
         </tr>
         <tr>
             <td colspan="3" style="border: 1px solid white; background:${irrCol}; color: white; padding: 5px; text-align: right; font-size: 11px; font-weight: 400;">อัตราผลตอบแทนเฉลี่ยต่อปี (IRR)</td>
-            <td style="border: 1px solid white; background:${irrCol}; color: white; padding: 5px; font-size: 11px; font-weight: 400;">${irr2}%</td>
-            <td style="border: 1px solid white; background:${irrCol}; color: white; padding: 5px; font-size: 11px; font-weight: 400;">${irr4}%</td>
-            <td style="border: 1px solid white; background:${irrCol}; color: white; padding: 5px; font-size: 11px; font-weight: 400;">${irr6}%</td>
-            <td style="border: 1px solid white; background:${custCol}; color: white; padding: 5px; font-size: 11px; font-weight: 400;">${irrCust}%</td>
+            <td style="border: 1px solid white; background:${irrCol}; color: white; padding: 5px; text-align: center; font-size: 11px; font-weight: 400;">${irr2}%</td>
+            <td style="border: 1px solid white; background:${irrCol}; color: white; padding: 5px; text-align: center; font-size: 11px; font-weight: 400;">${irr4}%</td>
+            <td style="border: 1px solid white; background:${irrCol}; color: white; padding: 5px; text-align: center; font-size: 11px; font-weight: 400;">${irr6}%</td>
+            <td style="border: 1px solid white; background:${custCol}; color: white; padding: 5px; text-align: center; font-size: 11px; font-weight: 400;">${irrCust}%</td>
             <td style="border: none; background: white;"></td>
         </tr>
         `;
@@ -1156,10 +1156,10 @@
                                         <th rowspan="2" style="background:${hdrColRest}; color:white; border: 1px solid white; padding: 2px; text-align: center; vertical-align: middle;">ผลประโยชน์<br>กรณีเสียชีวิต</th>
                                     </tr>
                                     <tr>
-                                        <th style="background:${hdrColRest}; color:white; border: 1px solid white; padding: 2px;">2%</th>
-                                        <th style="background:${hdrColRest}; color:white; border: 1px solid white; padding: 2px;">4%</th>
-                                        <th style="background:${hdrColRest}; color:white; border: 1px solid white; padding: 2px;">6%</th>
-                                        <th style="background:#4b82c3; color:white; border: 1px solid white; padding: 2px;">สมมุติเอง ${customRate}%</th>
+                                        <th style="background:${hdrColRest}; color:white; border: 1px solid white; padding: 2px; text-align: center;">2%</th>
+                                        <th style="background:${hdrColRest}; color:white; border: 1px solid white; padding: 2px; text-align: center;">4%</th>
+                                        <th style="background:${hdrColRest}; color:white; border: 1px solid white; padding: 2px; text-align: center;">6%</th>
+                                        <th style="background:#4b82c3; color:white; border: 1px solid white; padding: 2px; text-align: center;">สมมุติเอง ${customRate}%</th>
                                     </tr>
                                 </thead>
                                 <tbody>
