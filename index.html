@@ -31,6 +31,7 @@
         background-color: var(--bg-color);
         margin: 0; padding: 0; color: var(--text-dark);
         word-break: keep-all; overflow-wrap: break-word;
+        font-variant-numeric: tabular-nums; /* บังคับให้ความกว้างตัวเลขทุกตัวเท่ากัน */
     }
 
     #main-content { padding-bottom: 110px; }
@@ -178,13 +179,13 @@
         overflow-y: auto;
     }
     
-    .proj-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: center; table-layout: auto; min-width: 1000px;}
+    .proj-table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: auto; min-width: 1000px; font-variant-numeric: tabular-nums;}
     
     .proj-table th { background: linear-gradient(135deg, #1a1e29, #2c3245); color: white; padding: 10px 5px; font-weight: 600; border-bottom: 2px solid var(--gold); border-right: 1px solid rgba(255,255,255,0.1); line-height: 1.4; text-align: center; vertical-align: middle; white-space: nowrap; position: sticky; z-index: 5; top: 0;}
     .proj-table thead tr:nth-child(1) th { top: 0; }
     .proj-table thead tr:nth-child(2) th { top: 43px; }
 
-    .proj-table td { padding: 8px 5px; border-bottom: 1px solid var(--border-color); color: var(--text-dark); border-right: 1px solid var(--border-color); text-align: center; vertical-align: middle; white-space: nowrap;}
+    .proj-table td { padding: 8px 10px; border-bottom: 1px solid var(--border-color); color: var(--text-dark); border-right: 1px solid var(--border-color); vertical-align: middle; white-space: nowrap;}
     
     .proj-table tr:last-child td { border-bottom: none; }
     .proj-table tr:nth-child(even) { background-color: #f8fafc; }
@@ -652,25 +653,47 @@
 
 <script>
     // === ฐานข้อมูลตารางมูลค่าเวนคืน (Surrender Value) ===
-    const cvDataF = {
-        20: [0, 16800, 66000, 129800, 197300, 274100, 360400, 434900, 512100, 592200, 675300, 761400, 850700, 943300, 1039400, 1076500, 1115000, 1154900, 1196300, 1239200, 1283700, 1329900, 1377800, 1427500, 1480000],
-        30: [0, 16800, 66100, 129700, 197500, 274400, 360800, 435300, 512700, 592800, 675900, 762100, 851400, 944100, 1040100, 1077100, 1115500, 1155300, 1196600, 1239500, 1283900, 1330000, 1377800, 1427500, 1480000],
-        40: [0, 16800, 66300, 130100, 198200, 275300, 361800, 436600, 514100, 594400, 677600, 763900, 853300, 946000, 1042100, 1078900, 1117100, 1156700, 1197700, 1240300, 1284500, 1330400, 1378000, 1427500, 1480000],
-        50: [0, 17000, 67000, 131600, 200400, 278300, 365800, 441200, 519300, 600200, 684000, 770700, 860600, 953600, 1049800, 1086000, 1123400, 1162100, 1202300, 1243900, 1287200, 1332100, 1379000, 1427800, 1480000]
-    };
-    const cvDataM = {
-        20: [0, 16800, 66100, 129800, 197600, 274500, 360900, 435500, 512900, 593000, 676200, 762400, 851700, 944400, 1040500, 1077400, 1115700, 1155500, 1196700, 1239500, 1284000, 1330000, 1377800, 1427500, 1480000],
-        30: [0, 16800, 66200, 130100, 198100, 275200, 361800, 436900, 514000, 594300, 677500, 763700, 853200, 945900, 1041900, 1078700, 1116900, 1156400, 1197500, 1240100, 1284400, 1330300, 1378000, 1427500, 1480000],
-        40: [0, 16900, 66600, 130900, 199300, 276800, 363800, 438900, 516600, 597200, 680600, 767100, 856600, 949500, 1045600, 1082000, 1119700, 1158800, 1199400, 1241600, 1285400, 1331000, 1378300, 1427600, 1480000],
-        50: [0, 17200, 67800, 133100, 202700, 281300, 369600, 445700, 524400, 605800, 690000, 777200, 867300, 960500, 1056900, 1092100, 1128600, 1166500, 1205700, 1246500, 1289000, 1333200, 1379500, 1428000, 1480000]
+    const cvData = {
+        '15': {
+            'F': {
+                10: [0, 16800, 66000, 129500, 197300, 274000, 360300, 434800, 512000, 592100, 675100, 761200, 850500, 943100, 1039200, 1076300, 1114800, 1154700, 1196100, 1239100, 1283600, 1329800, 1377700, 1427500, 1480000],
+                20: [0, 16800, 66000, 129800, 197300, 274100, 360400, 434900, 512100, 592200, 675300, 761400, 850700, 943300, 1039400, 1076500, 1115000, 1154900, 1196300, 1239200, 1283700, 1329900, 1377800, 1427500, 1480000],
+                30: [0, 16800, 66100, 129700, 197500, 274400, 360800, 435300, 512700, 592800, 675900, 762100, 851400, 944100, 1040100, 1077100, 1115500, 1155300, 1196600, 1239500, 1283900, 1330000, 1377800, 1427500, 1480000],
+                40: [0, 16800, 66300, 130100, 198200, 275300, 361800, 436600, 514100, 594400, 677600, 763900, 853300, 946000, 1042100, 1078900, 1117100, 1156700, 1197700, 1240300, 1284500, 1330400, 1378000, 1427500, 1480000],
+                50: [0, 17000, 67000, 131600, 200400, 278300, 365800, 441200, 519300, 600200, 684000, 770700, 860600, 953600, 1049800, 1086000, 1123400, 1162100, 1202300, 1243900, 1287200, 1332100, 1379000, 1427800, 1480000]
+            },
+            'M': {
+                10: [0, 16800, 66100, 129800, 197600, 274500, 360900, 435400, 512700, 592800, 675900, 762000, 851300, 943900, 1039900, 1076900, 1115300, 1155100, 1196400, 1239300, 1283800, 1329900, 1377800, 1427500, 1480000],
+                20: [0, 16800, 66100, 129800, 197600, 274500, 360900, 435500, 512900, 593000, 676200, 762400, 851700, 944400, 1040500, 1077400, 1115700, 1155500, 1196700, 1239500, 1284000, 1330000, 1377800, 1427500, 1480000],
+                30: [0, 16800, 66200, 130100, 198100, 275200, 361800, 436900, 514000, 594300, 677500, 763700, 853200, 945900, 1041900, 1078700, 1116900, 1156400, 1197500, 1240100, 1284400, 1330300, 1378000, 1427500, 1480000],
+                40: [0, 16900, 66600, 130900, 199300, 276800, 363800, 438900, 516600, 597200, 680600, 767100, 856600, 949500, 1045600, 1082000, 1119700, 1158800, 1199400, 1241600, 1285400, 1331000, 1378300, 1427600, 1480000],
+                50: [0, 17200, 67800, 133100, 202700, 281300, 369600, 445700, 524400, 605800, 690000, 777200, 867300, 960500, 1056900, 1092100, 1128600, 1166500, 1205700, 1246500, 1289000, 1333200, 1379500, 1428000, 1480000]
+            }
+        },
+        '7': {
+            'F': {
+                10: [3300, 31500, 95500, 163000, 245100, 311400, 380100, 392900, 406200, 419900, 434100, 448900, 464200, 480100, 496600, 513700, 531400, 549800, 568800, 588600, 609100, 630300, 652400, 675300, 700000],
+                20: [3300, 31600, 95600, 163100, 245200, 311500, 380300, 393100, 406300, 420000, 434200, 449000, 464300, 480200, 496700, 513700, 531500, 549800, 568900, 588600, 609100, 630400, 652400, 675300, 700000],
+                30: [3300, 31600, 95700, 163300, 245500, 311900, 380800, 393500, 406700, 420500, 434700, 449400, 464700, 480500, 497000, 514000, 531700, 550000, 569000, 588700, 609200, 630400, 652400, 675300, 700000],
+                40: [3400, 31700, 96100, 163900, 246400, 313100, 382100, 394800, 408000, 421700, 435800, 450500, 465700, 481500, 497800, 514800, 532300, 550600, 569500, 589100, 609400, 630500, 652500, 675300, 700000],
+                50: [3400, 32200, 97400, 166000, 249500, 316900, 386700, 399400, 412400, 426000, 440000, 454400, 469400, 485000, 501000, 517700, 534900, 552800, 571300, 590500, 610400, 631200, 652800, 675400, 700000]
+            },
+            'M': {
+                10: [3300, 31600, 95800, 163400, 245600, 312000, 380900, 393600, 406800, 420500, 434700, 449400, 464600, 480500, 496900, 513900, 531600, 549900, 568900, 588700, 609100, 630400, 652400, 675300, 700000],
+                20: [3300, 31700, 95900, 163500, 245900, 312400, 381300, 394000, 407200, 420800, 435000, 449700, 464900, 480700, 497100, 514100, 531800, 550100, 569100, 588800, 609200, 630400, 652400, 675300, 700000],
+                30: [3400, 31700, 96200, 164000, 246600, 313300, 382400, 395000, 408200, 421800, 435900, 450500, 465700, 481400, 497700, 514700, 532200, 550500, 569400, 589000, 609400, 630500, 652500, 675300, 700000],
+                40: [3400, 31700, 96100, 163900, 246400, 313100, 382100, 394800, 408000, 421700, 435800, 450500, 465700, 481500, 497800, 514800, 532300, 550600, 569500, 589100, 609400, 630500, 652500, 675300, 700000],
+                50: [3400, 32200, 97400, 166000, 249500, 316900, 386700, 399400, 412400, 426000, 440000, 454400, 469400, 485000, 501000, 517700, 534900, 552800, 571300, 590500, 610400, 631200, 652800, 675400, 700000]
+            }
+        }
     };
 
     function getSurrenderValue(gender, age, year, sa) {
-        if (currentPlan === '7') return 0; 
-        let ds = gender === 'M' ? cvDataM : cvDataF;
+        let ds = cvData[currentPlan][gender];
         
         let lowerAge, upperAge;
-        if (age < 30) { lowerAge = 20; upperAge = 30; }
+        if (age < 20) { lowerAge = 10; upperAge = 20; }
+        else if (age < 30) { lowerAge = 20; upperAge = 30; }
         else if (age < 40) { lowerAge = 30; upperAge = 40; }
         else { lowerAge = 40; upperAge = 50; }
 
@@ -874,17 +897,17 @@
 
             mainTbodyHTML += `
             <tr>
-                <td>${i}</td>
-                <td>${premThisYear > 0 ? formatNum(premThisYear) : "-"}</td>
-                <td class="td-acc">${formatNum(accPrem)}</td>
-                <td>${cbPercent}</td>
-                <td class="td-guarantee">${formatNum(cbAmount)}</td>
-                <td style="${hl}">${ng2 !== "-" ? formatNum(ng2) : "-"}</td>
-                <td style="${hl}">${ng4 !== "-" ? formatNum(ng4) : "-"}</td>
-                <td class="td-highlight" style="${hl}">${ng6 !== "-" ? formatNum(ng6) : "-"}</td>
-                <td class="td-custom" style="${hl}">${ngCust !== "-" ? formatNum(ngCust) : "-"}</td>
-                <td style="font-weight:600; color: #0f172a;">${formatNum(dbVal)}</td>
-                <td style="background-color: #fdf5eb; font-weight: 500;">${cvVal > 0 ? formatNum(Math.round(cvVal)) : "-"}</td>
+                <td style="text-align: center;">${i}</td>
+                <td style="text-align: center;">${premThisYear > 0 ? formatNum(premThisYear) : "-"}</td>
+                <td class="td-acc" style="text-align: center;">${formatNum(accPrem)}</td>
+                <td style="text-align: center;">${cbPercent}</td>
+                <td class="td-guarantee" style="text-align: center;">${formatNum(cbAmount)}</td>
+                <td style="${hl} text-align: center;">${ng2 !== "-" ? formatNum(ng2) : "-"}</td>
+                <td style="${hl} text-align: center;">${ng4 !== "-" ? formatNum(ng4) : "-"}</td>
+                <td class="td-highlight" style="${hl} text-align: center;">${ng6 !== "-" ? formatNum(ng6) : "-"}</td>
+                <td class="td-custom" style="${hl} text-align: center;">${ngCust !== "-" ? formatNum(ngCust) : "-"}</td>
+                <td style="font-weight:600; color: #0f172a; text-align: right;">${formatNum(dbVal)}</td>
+                <td style="background-color: #fdf5eb; font-weight: 500; text-align: right;">${cvVal > 0 ? formatNum(Math.round(cvVal)) : "-"}</td>
             </tr>
             `;
         }
@@ -893,13 +916,13 @@
         mainTbodyHTML += `
         <tr style="background-color: #f1f5f9; font-weight: 700; border-top: 2px solid var(--primary);">
             <td colspan="2" style="text-align: right; padding-right: 15px;">รวมผลประโยชน์ทั้งหมดตลอดสัญญา</td>
-            <td class="td-acc">${formatNum(totalPremium)}</td>
+            <td class="td-acc" style="text-align: center;">${formatNum(totalPremium)}</td>
             <td></td>
-            <td class="td-guarantee">${formatNum(totalGuaranteed)}</td>
-            <td>${formatNum(grand_tot_2)}</td>
-            <td>${formatNum(grand_tot_4)}</td>
-            <td class="td-highlight" style="color: #c2410c;">${formatNum(grand_tot_6)}</td>
-            <td class="td-custom" style="color: #0369a1;">${formatNum(grand_tot_custom)}</td>
+            <td class="td-guarantee" style="text-align: center;">${formatNum(totalGuaranteed)}</td>
+            <td style="text-align: center;">${formatNum(grand_tot_2)}</td>
+            <td style="text-align: center;">${formatNum(grand_tot_4)}</td>
+            <td class="td-highlight" style="color: #c2410c; text-align: center;">${formatNum(grand_tot_6)}</td>
+            <td class="td-custom" style="color: #0369a1; text-align: center;">${formatNum(grand_tot_custom)}</td>
             <td colspan="2"></td>
         </tr>
         `;
@@ -1000,14 +1023,14 @@
             tbodyHTML += `
             <tr style="background-color: ${rowBg};">
                 <td style="${bd} text-align: center;">${i}</td>
-                <td style="${bd} text-align: right;">${premThisYear > 0 ? formatNum(premThisYear) : "-"}</td>
-                <td style="${bd} text-align: right; background-color: #f1f5f9;">${formatNum(accPrem)}</td>
+                <td style="${bd} text-align: center;">${premThisYear > 0 ? formatNum(premThisYear) : "-"}</td>
+                <td style="${bd} text-align: center; background-color: #f1f5f9;">${formatNum(accPrem)}</td>
                 <td style="${bd} text-align: center;">${cbPercent}</td>
-                <td style="${bd} text-align: right;">${formatNum(cbAmount)}</td>
-                <td style="${bd} text-align: right;">${ng2 !== "-" ? formatNum(ng2) : "-"}</td>
-                <td style="${bd} text-align: right;">${ng4 !== "-" ? formatNum(ng4) : "-"}</td>
-                <td style="${bd} text-align: right; color:#b45309;">${ng6 !== "-" ? formatNum(ng6) : "-"}</td>
-                <td style="${bd} text-align: right; color:#0284c7;">${ngCust !== "-" ? formatNum(ngCust) : "-"}</td>
+                <td style="${bd} text-align: center;">${formatNum(cbAmount)}</td>
+                <td style="${bd} text-align: center;">${ng2 !== "-" ? formatNum(ng2) : "-"}</td>
+                <td style="${bd} text-align: center;">${ng4 !== "-" ? formatNum(ng4) : "-"}</td>
+                <td style="${bd} text-align: center; color:#b45309;">${ng6 !== "-" ? formatNum(ng6) : "-"}</td>
+                <td style="${bd} text-align: center; color:#0284c7;">${ngCust !== "-" ? formatNum(ngCust) : "-"}</td>
                 <td style="${bd} text-align: right;">${formatNum(dbVal)}</td>
                 <td style="${bd} text-align: right; background-color: #fdf5eb;">${cvVal > 0 ? formatNum(Math.round(cvVal)) : "-"}</td>
             </tr>
@@ -1029,40 +1052,40 @@
         let irr6 = getIRR(currentPlan, annualPremium, cbYearly, matGuar, val_y1_6, val_y2_6);
         let irrCust = getIRR(currentPlan, annualPremium, cbYearly, matGuar, val_y1_cust, val_y2_cust);
 
-        // ส่วนสรุปท้ายตาราง (ไม่ใช้ตัวหนาในแถวทั่วไป และบีบ padding เหลือ 2px)
+        // ส่วนสรุปท้ายตาราง (เปลี่ยนเป็นกึ่งกลาง Center)
         tbodyHTML += `
         <tr style="background-color: #154b42; color: white; text-align: center; font-weight: 400;">
             <td colspan="2" style="background: white; border: none;"></td>
-            <td style="padding: 2px; border: 1px solid white; line-height: 1.1;">รวมชำระเบี้ย<br><span style="font-size:10px; font-weight: 600;">${formatNum(totalPremium)}</span></td>
-            <td colspan="2" style="padding: 2px; border: 1px solid white; line-height: 1.1;">รวมรับเงินคืน<br><span style="font-size:10px; font-weight: 600;">${formatNum(totalGuaranteed)}</span></td>
-            <td style="padding: 2px; border: 1px solid white; line-height: 1.1;">ผลประโยชน์ไม่รับรอง<br><span style="font-size:10px; font-weight: 600;">${formatNum(ng_tot_2)}</span></td>
-            <td style="padding: 2px; border: 1px solid white; line-height: 1.1;">ผลประโยชน์ไม่รับรอง<br><span style="font-size:10px; font-weight: 600;">${formatNum(ng_tot_4)}</span></td>
-            <td style="padding: 2px; border: 1px solid white; line-height: 1.1;">ผลประโยชน์ไม่รับรอง<br><span style="font-size:10px; font-weight: 600;">${formatNum(ng_tot_6)}</span></td>
-            <td style="background-color: #4b82c3; padding: 2px; border: 1px solid white; line-height: 1.1;">ผลประโยชน์ไม่รับรอง<br><span style="font-size:10px; font-weight: 600;">${formatNum(ng_tot_cust)}</span></td>
+            <td style="padding: 2px; border: 1px solid white; line-height: 1.1; text-align: center;">รวมชำระเบี้ย<br><span style="font-size:10px; font-weight: 600;">${formatNum(totalPremium)}</span></td>
+            <td colspan="2" style="padding: 2px; border: 1px solid white; line-height: 1.1; text-align: center;">รวมรับเงินคืน<br><span style="font-size:10px; font-weight: 600;">${formatNum(totalGuaranteed)}</span></td>
+            <td style="padding: 2px; border: 1px solid white; line-height: 1.1; text-align: center;">ผลประโยชน์ไม่รับรอง<br><span style="font-size:10px; font-weight: 600;">${formatNum(ng_tot_2)}</span></td>
+            <td style="padding: 2px; border: 1px solid white; line-height: 1.1; text-align: center;">ผลประโยชน์ไม่รับรอง<br><span style="font-size:10px; font-weight: 600;">${formatNum(ng_tot_4)}</span></td>
+            <td style="padding: 2px; border: 1px solid white; line-height: 1.1; text-align: center;">ผลประโยชน์ไม่รับรอง<br><span style="font-size:10px; font-weight: 600;">${formatNum(ng_tot_6)}</span></td>
+            <td style="background-color: #4b82c3; padding: 2px; border: 1px solid white; line-height: 1.1; text-align: center;">ผลประโยชน์ไม่รับรอง<br><span style="font-size:10px; font-weight: 600;">${formatNum(ng_tot_cust)}</span></td>
             <td colspan="2" style="background: white; border: none;"></td>
         </tr>
-        <tr style="background-color: #fffcf5; font-weight: 400; color: #b45309; text-align: center;">
-            <td colspan="5" style="padding: 2px 4px; border: 1px solid ${borderColor}; text-align: right; font-size:9.5px; font-weight: 600;">รวมรับผลประโยชน์ทั้งหมดตลอดสัญญา</td>
-            <td style="padding: 2px 4px; border: 1px solid ${borderColor}; font-size:9.5px; font-weight: 600;">${formatNum(tot_2)}</td>
-            <td style="padding: 2px 4px; border: 1px solid ${borderColor}; font-size:9.5px; font-weight: 600;">${formatNum(tot_4)}</td>
-            <td style="padding: 2px 4px; border: 1px solid ${borderColor}; font-size:9.5px; font-weight: 600;">${formatNum(tot_6)}</td>
-            <td style="padding: 2px 4px; border: 1px solid ${borderColor}; color: #0369a1; font-size:9.5px; font-weight: 600;">${formatNum(tot_cust)}</td>
+        <tr style="background-color: #fffcf5; font-weight: 400; color: #b45309;">
+            <td colspan="5" style="padding: 4px 6px; border: 1px solid ${borderColor}; text-align: right; font-size:9.5px; font-weight: 600;">รวมรับผลประโยชน์ทั้งหมดตลอดสัญญา</td>
+            <td style="padding: 4px 6px; border: 1px solid ${borderColor}; text-align: center; font-size:9.5px; font-weight: 600;">${formatNum(tot_2)}</td>
+            <td style="padding: 4px 6px; border: 1px solid ${borderColor}; text-align: center; font-size:9.5px; font-weight: 600;">${formatNum(tot_4)}</td>
+            <td style="padding: 4px 6px; border: 1px solid ${borderColor}; text-align: center; font-size:9.5px; font-weight: 600;">${formatNum(tot_6)}</td>
+            <td style="padding: 4px 6px; border: 1px solid ${borderColor}; color: #0369a1; text-align: center; font-size:9.5px; font-weight: 600;">${formatNum(tot_cust)}</td>
             <td colspan="2" style="background: white; border: none;"></td>
         </tr>
-        <tr style="background-color: #f8fafc; font-weight: 400; color: #222222; text-align: center;">
-            <td colspan="5" style="padding: 2px 4px; border: 1px solid ${borderColor}; text-align: right; font-size:9.5px;">รวมผลประโยชน์ ต่อ เบี้ยฯ รวม</td>
-            <td style="padding: 2px 4px; border: 1px solid ${borderColor}; font-size:9.5px;">${ratio2} เท่า</td>
-            <td style="padding: 2px 4px; border: 1px solid ${borderColor}; font-size:9.5px;">${ratio4} เท่า</td>
-            <td style="padding: 2px 4px; border: 1px solid ${borderColor}; font-size:9.5px;">${ratio6} เท่า</td>
-            <td style="padding: 2px 4px; border: 1px solid ${borderColor}; color: #0284c7; font-size:9.5px;">${ratioCust} เท่า</td>
+        <tr style="background-color: #f8fafc; font-weight: 400; color: #222222;">
+            <td colspan="5" style="padding: 4px 6px; border: 1px solid ${borderColor}; text-align: right; font-size:9.5px;">รวมผลประโยชน์ ต่อ เบี้ยฯ รวม</td>
+            <td style="padding: 4px 6px; border: 1px solid ${borderColor}; text-align: center; font-size:9.5px;">${ratio2} เท่า</td>
+            <td style="padding: 4px 6px; border: 1px solid ${borderColor}; text-align: center; font-size:9.5px;">${ratio4} เท่า</td>
+            <td style="padding: 4px 6px; border: 1px solid ${borderColor}; text-align: center; font-size:9.5px;">${ratio6} เท่า</td>
+            <td style="padding: 4px 6px; border: 1px solid ${borderColor}; color: #0284c7; text-align: center; font-size:9.5px;">${ratioCust} เท่า</td>
             <td colspan="2" style="background: white; border: none;"></td>
         </tr>
-        <tr style="background-color: #e87c2b; color: white; text-align: center; font-weight: 400;">
-            <td colspan="5" style="padding: 2px 4px; border: 1px solid white; text-align: right; font-size:9.5px;">อัตราผลตอบแทนเฉลี่ยต่อปี (IRR)</td>
-            <td style="padding: 2px 4px; border: 1px solid white; font-size:9.5px;">${irr2}%</td>
-            <td style="padding: 2px 4px; border: 1px solid white; font-size:9.5px;">${irr4}%</td>
-            <td style="padding: 2px 4px; border: 1px solid white; font-size:9.5px;">${irr6}%</td>
-            <td style="background-color: #4b82c3; padding: 2px 4px; border: 1px solid white; font-size:9.5px;">${irrCust}%</td>
+        <tr style="background-color: #e87c2b; color: white; font-weight: 400;">
+            <td colspan="5" style="padding: 4px 6px; border: 1px solid white; text-align: right; font-size:9.5px;">อัตราผลตอบแทนเฉลี่ยต่อปี (IRR)</td>
+            <td style="padding: 4px 6px; border: 1px solid white; text-align: center; font-size:9.5px;">${irr2}%</td>
+            <td style="padding: 4px 6px; border: 1px solid white; text-align: center; font-size:9.5px;">${irr4}%</td>
+            <td style="padding: 4px 6px; border: 1px solid white; text-align: center; font-size:9.5px;">${irr6}%</td>
+            <td style="background-color: #4b82c3; padding: 4px 6px; border: 1px solid white; text-align: center; font-size:9.5px;">${irrCust}%</td>
             <td colspan="2" style="background: white; border: none;"></td>
         </tr>
         `;
@@ -1073,7 +1096,6 @@
             <button class="close-report-btn" onclick="closeReport()"><i class="fa-solid fa-xmark"></i></button>
             
             <!-- Dashboard Screen Capture A4 Layout (794x1123) -->
-            <!-- *ตั้งใจผลัก Margin บนให้มากขึ้น (60px) และลด Margin ล่าง (15px) เพื่อให้ส่วนล่างสุดขยับขึ้นมาไม่ตกขอบ A4 -->
             <div id="capture-area" style="width: 794px; height: 1123px; margin: 0 auto; background: white; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; font-family: 'Prompt', sans-serif; position: relative; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.1); padding: 40px 40px 15px 40px;">
                 
                 <div style="display: flex; flex-direction: column; gap: 6px;">
@@ -1139,7 +1161,7 @@
                     </div>
                 </div>
 
-                <!-- Detailed Projection Table (ดึงตารางให้ชิดกับส่วนบนมากขึ้น) -->
+                <!-- Detailed Projection Table -->
                 <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; margin-top: 8px;">
                     <h3 style="margin: 0 0 4px 0; font-size: 11.5px; color: #0B2B46;"><i class="fa-solid fa-chart-column" style="color:#d4af37;"></i> ตารางรายละเอียดผลประโยชน์ตลอดสัญญา</h3>
                     
@@ -1180,7 +1202,7 @@
                     </div>
                 </div>
 
-                <!-- Footer Agent Card : ปรับภาพโปรไฟล์และฟอนต์ให้ใหญ่เห็นชัดเจน -->
+                <!-- Footer Agent Card -->
                 <div style="padding-top: 8px; border-top: 2px solid #e86614; display: flex; justify-content: space-between; align-items: center;">
                     <div style="display: flex; align-items: center; gap: 15px;">
                         <img src="agent.png" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid #e86614;" onerror="this.src='https://placehold.co/100x100/e86614/ffffff?text=Agent'">
